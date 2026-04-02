@@ -13,7 +13,8 @@ html {
 }
 
 body {
-  @apply bg-background text-foreground font-body;
+  @apply bg-background text-foreground;
+  font-family: inherit;
 }
 
 /* Dark mode support via next-themes */
