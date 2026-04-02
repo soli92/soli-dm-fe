@@ -5,9 +5,14 @@ const config: Config = {
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
+    "./node_modules/@soli92/solids/**/*.{ts,tsx,js,jsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["system-ui", "sans-serif"],
+      },
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };
