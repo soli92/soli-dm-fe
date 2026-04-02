@@ -1,56 +1,84 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export function Navigation() {
-  const router = useRouter();
   const { user, logout } = useAuth();
+  const router = useRouter();
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
     router.push("/");
   };
 
   return (
-    <nav className="bg-slate-900 border-b border-slate-700 text-white">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold flex items-center gap-2">
-          <span>🎲</span>
-          <span>Soli DM</span>
-        </Link>
+    <nav className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-2xl">🎲</span>
+              <span className="font-bold text-lg">Soli DM</span>
+            </Link>
 
-        <div className="flex items-center gap-6">
-          {user ? (
-            <>
-              <Link href="/campaigns" className="hover:text-blue-400">
-                Campagne
-              </Link>
-              <Link href="/characters" className="hover:text-blue-400">
-                Personaggi
-              </Link>
-              <Link href="/dice-roller" className="hover:text-blue-400">
-                Dadi
-              </Link>
-              <Link href="/wiki" className="hover:text-blue-400">
-                Wiki
-              </Link>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                Logout
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="hover:text-blue-400">
-                Login
-              </Link>
-              <Link href="/register">
-                <Button size="sm">Registrati</Button>
-              </Link>
-            </>
-          )}
+            {user && (
+              <div className="flex gap-4">
+                <Link
+                  href="/campaigns"
+                  className="text-gray-600 hover:text-gray-800 transition"
+                >
+                  Campagne
+                </Link>
+                <Link
+                  href="/characters"
+                  className="text-gray-600 hover:text-gray-800 transition"
+                >
+                  Personaggi
+                </Link>
+                <Link
+                  href="/dice-roller"
+                  className="text-gray-600 hover:text-gray-800 transition"
+                >
+                  Dadi
+                </Link>
+                <Link
+                  href="/wiki"
+                  className="text-gray-600 hover:text-gray-800 transition"
+                >
+                  Wiki
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4">
+            {user ? (
+              <>
+                <span className="text-sm text-gray-600">{user.email}</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="outline" size="sm">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button size="sm">Registrati</Button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </nav>
