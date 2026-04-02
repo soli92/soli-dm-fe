@@ -6,6 +6,7 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./hooks/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
     "./node_modules/@soli92/solids/**/*.{ts,tsx,js,jsx}",
   ],
   plugins: [require("tailwindcss-animate")],

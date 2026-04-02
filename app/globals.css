@@ -4,8 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  @apply m-0 p-0 box-border;
+/* In @layer base così le utility (es. p-6) restano prioritarie — * senza layer sovrascriveva il padding. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply m-0 p-0 box-border;
+  }
 }
 
 html {
