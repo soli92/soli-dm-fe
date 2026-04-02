@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import { appMuted, appPageTitle, appPanelStack } from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 export default function LoginPage() {
@@ -49,7 +49,7 @@ export default function LoginPage() {
             <code className="text-xs text-foreground">.env.local</code>.
           </p>
         )}
-        <form onSubmit={handleSubmit} className={`${appPanel} space-y-4`}>
+        <form onSubmit={handleSubmit} className={appPanelStack}>
           <Input
             label="Email"
             type="email"

@@ -4,7 +4,12 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { getRuleCategories } from "@/lib/api";
 import { useAsyncList } from "@/hooks/useAsyncList";
-import { appLinkBack, appListItem, appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import {
+  appLinkBack,
+  appMuted,
+  appPageTitle,
+  appPanelStack,
+} from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 export default function WikiRulesPage() {
@@ -24,15 +29,19 @@ export default function WikiRulesPage() {
         {loading ? (
           <p className={appMuted}>Caricamento…</p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="flex flex-col gap-4">
             {list.map((cat) => (
               <li key={cat.id}>
                 <Link
                   href={`/wiki/rules/${encodeURIComponent(cat.id)}`}
-                  className={`${appListItem} ${appPanel} block`}
+                  className={`${appPanelStack} block no-underline transition-colors hover:border-primary/40`}
                 >
-                  <span className="font-semibold font-serif text-foreground">{cat.title}</span>
-                  <p className={`${appMuted} text-sm mt-1`}>{cat.description}</p>
+                  <span className="font-serif font-semibold text-foreground">
+                    {cat.title}
+                  </span>
+                  <p className={`${appMuted} text-sm leading-relaxed`}>
+                    {cat.description}
+                  </p>
                 </Link>
               </li>
             ))}

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCampaigns, rollDice, getDiceHistory } from "@/lib/api";
 import type { Campaign, DiceRollRow } from "@/lib/types";
-import { appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import { appMuted, appPageTitle, appPanelStack } from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 export default function DiceRollerPage() {
@@ -70,9 +70,9 @@ export default function DiceRollerPage() {
           <code className="text-primary font-mono">NdX</code>, senza modificatori tipo +5.
         </p>
 
-        <form onSubmit={handleRoll} className={`${appPanel} space-y-4`}>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">
+        <form onSubmit={handleRoll} className={appPanelStack}>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-foreground">
               Campagna (opzionale, per salvare nello storico)
             </label>
             <select
@@ -95,9 +95,9 @@ export default function DiceRollerPage() {
         </form>
 
         {last && (
-          <div className={appPanel}>
-            <p className="font-semibold font-serif text-foreground">{last.notation}</p>
-            <p className="text-foreground/90">
+          <div className={`${appPanelStack} gap-3`}>
+            <p className="font-serif font-semibold text-foreground">{last.notation}</p>
+            <p className="leading-relaxed text-foreground/90">
               Tiri: {last.rolls.join(", ")} → <strong>{last.total}</strong>
             </p>
           </div>

@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCampaigns } from "@/hooks/useCampaigns";
 import type { CreateCampaignInput } from "@/lib/types";
-import { appListItem, appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import {
+  appListItem,
+  appMuted,
+  appPageTitle,
+  appPanelStack,
+} from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 export default function CampaignsPage() {
@@ -55,9 +60,9 @@ export default function CampaignsPage() {
       <div className="max-w-3xl mx-auto space-y-8">
         <h1 className={appPageTitle}>Campagne</h1>
 
-        <section className={`${appPanel} space-y-4`}>
+        <section className={appPanelStack}>
           <h2 className="text-lg font-semibold font-serif text-foreground">Nuova campagna</h2>
-          <form onSubmit={handleCreate} className="space-y-3">
+          <form onSubmit={handleCreate} className="flex flex-col gap-3">
             <Input
               label="Nome"
               value={form.name}
@@ -108,15 +113,15 @@ export default function CampaignsPage() {
           ) : list.length === 0 ? (
             <p className={appMuted}>Nessuna campagna ancora.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="flex flex-col gap-3">
               {list.map((c) => (
                 <li key={c.id}>
                   <Link
                     href={`/campaigns/${c.id}`}
-                    className={`${appListItem} p-4 block`}
+                    className={`${appListItem} flex flex-col gap-1 p-4`}
                   >
                     <span className="font-semibold text-foreground">{c.name}</span>
-                    <span className={`${appMuted} text-sm block`}>
+                    <span className={`${appMuted} block text-sm leading-relaxed`}>
                       DM: {c.dm_name}
                       {c.world_setting ? ` · ${c.world_setting}` : ""}
                     </span>

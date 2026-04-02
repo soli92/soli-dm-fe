@@ -7,7 +7,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Card({ className = "", children, ...props }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-lg border border-gray-200 shadow-sm ${className}`}
+      className={`rounded-xl border border-border bg-card text-card-foreground shadow-sm ${className}`}
       {...props}
     >
       {children}
@@ -17,7 +17,10 @@ export function Card({ className = "", children, ...props }: CardProps) {
 
 export function CardHeader({ className = "", children, ...props }: CardProps) {
   return (
-    <div className={`px-6 py-4 border-b border-gray-200 ${className}`} {...props}>
+    <div
+      className={`flex flex-col gap-1.5 border-b border-border px-6 pb-4 pt-6 ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -25,7 +28,7 @@ export function CardHeader({ className = "", children, ...props }: CardProps) {
 
 export function CardContent({ className = "", children, ...props }: CardProps) {
   return (
-    <div className={`px-6 py-4 ${className}`} {...props}>
+    <div className={`flex flex-col gap-4 px-6 py-6 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -34,7 +37,7 @@ export function CardContent({ className = "", children, ...props }: CardProps) {
 export function CardFooter({ className = "", children, ...props }: CardProps) {
   return (
     <div
-      className={`px-6 py-4 border-t border-gray-200 flex gap-2 justify-end ${className}`}
+      className={`flex flex-wrap items-center justify-end gap-2 border-t border-border px-6 py-4 ${className}`}
       {...props}
     >
       {children}

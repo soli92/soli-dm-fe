@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "🎲 Soli Dungeon Master",
-  description: "Manage your D&D campaigns, characters, rules and wiki",
+  title: "Soli Dungeon Master",
+  description:
+    "Campagne D&D, personaggi, dadi e wiki — strumenti per giocatori e Dungeon Master.",
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' font-weight='bold'>🎲</text></svg>",
+    icon: [{ url: "/brand/d20-icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/brand/d20-icon.svg", type: "image/svg+xml" }],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#b45309",
 };
 
 export default function RootLayout({
@@ -16,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="it" suppressHydrationWarning>
       <head />
       <body>
         <Providers>{children}</Providers>

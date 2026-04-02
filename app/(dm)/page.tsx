@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { appListItem, appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import { D20Icon } from "@/components/brand/D20Icon";
+import { appListItem, appMuted, appPageTitle, appPanelStack } from "@/lib/ui-classes";
 
 export default function Home() {
   return (
@@ -12,12 +13,13 @@ export default function Home() {
       <div className="container relative mx-auto px-4 py-16 md:py-20">
         <div className="text-center mb-14 md:mb-16">
           <h1
-            className={`${appPageTitle} text-4xl md:text-6xl mb-4 flex flex-wrap items-center justify-center gap-3 md:gap-4`}
+            className={`${appPageTitle} mb-4 flex flex-wrap items-center justify-center gap-4 text-4xl md:gap-5 md:text-6xl`}
           >
-            <span className="text-5xl md:text-7xl" aria-hidden>
-              🎲
-            </span>
-            Soli Dungeon Master
+            <D20Icon
+              decorative
+              className="h-16 w-16 drop-shadow-md md:h-24 md:w-24"
+            />
+            <span>Soli Dungeon Master</span>
           </h1>
           <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8">
             Gestisci le tue campagne D&amp;D, personaggi, regole e wiki in un unico posto
@@ -36,35 +38,58 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[
             { emoji: "⚔️", title: "Campagne", desc: "Crea e gestisci le tue campagne D&D" },
             { emoji: "👤", title: "Personaggi", desc: "Scheda personaggi con classe e razza" },
             { emoji: "🎯", title: "Dadi", desc: "Lancia dadi e storico per campagna" },
             { emoji: "📖", title: "Wiki", desc: "Classi, razze, divinità e regole" },
           ].map((card) => (
-            <div key={card.title} className={appPanel}>
-              <div className="text-3xl mb-2" aria-hidden>
+            <div key={card.title} className={appPanelStack}>
+              <div className="text-3xl leading-none" aria-hidden>
                 {card.emoji}
               </div>
-              <h3 className="text-xl font-bold font-serif mb-2 text-foreground">{card.title}</h3>
-              <p className={`${appMuted} text-sm`}>{card.desc}</p>
+              <h3 className="font-serif text-xl font-bold text-foreground">
+                {card.title}
+              </h3>
+              <p className={`${appMuted} text-sm leading-relaxed`}>{card.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          <Link href="/campaigns" className={appListItem + " text-center p-8"}>
-            <h2 className="text-2xl font-bold font-serif mb-3 text-foreground">Le mie campagne</h2>
-            <p className={appMuted}>Visualizza e gestisci le tue campagne</p>
+        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <Link
+            href="/campaigns"
+            className={`${appListItem} flex flex-col gap-3 p-8 text-center`}
+          >
+            <h2 className="font-serif text-2xl font-bold text-foreground">
+              Le mie campagne
+            </h2>
+            <p className={`${appMuted} text-sm leading-relaxed`}>
+              Visualizza e gestisci le tue campagne
+            </p>
           </Link>
-          <Link href="/characters" className={appListItem + " text-center p-8"}>
-            <h2 className="text-2xl font-bold font-serif mb-3 text-foreground">I miei personaggi</h2>
-            <p className={appMuted}>Gestisci i tuoi personaggi</p>
+          <Link
+            href="/characters"
+            className={`${appListItem} flex flex-col gap-3 p-8 text-center`}
+          >
+            <h2 className="font-serif text-2xl font-bold text-foreground">
+              I miei personaggi
+            </h2>
+            <p className={`${appMuted} text-sm leading-relaxed`}>
+              Gestisci i tuoi personaggi
+            </p>
           </Link>
-          <Link href="/dice-roller" className={appListItem + " text-center p-8"}>
-            <h2 className="text-2xl font-bold font-serif mb-3 text-foreground">Lancia dadi</h2>
-            <p className={appMuted}>Simulatore di lancio dadi</p>
+          <Link
+            href="/dice-roller"
+            className={`${appListItem} flex flex-col gap-3 p-8 text-center`}
+          >
+            <h2 className="font-serif text-2xl font-bold text-foreground">
+              Lancia dadi
+            </h2>
+            <p className={`${appMuted} text-sm leading-relaxed`}>
+              Simulatore di lancio dadi
+            </p>
           </Link>
         </div>
       </div>

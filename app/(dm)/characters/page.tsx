@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCampaigns, getCharacters, createCharacter } from "@/lib/api";
 import type { Campaign, Character } from "@/lib/types";
-import { appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import { appMuted, appPageTitle, appPanelStack } from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 function CharactersContent() {
@@ -108,7 +108,7 @@ function CharactersContent() {
           </Link>
         </div>
 
-        <section className={`${appPanel} space-y-4`}>
+        <section className={appPanelStack}>
           <h2 className="text-lg font-semibold font-serif text-foreground">
             Filtra per campagna
           </h2>
@@ -126,11 +126,11 @@ function CharactersContent() {
           </select>
         </section>
 
-        <section className={`${appPanel} space-y-4`}>
+        <section className={appPanelStack}>
           <h2 className="text-lg font-semibold font-serif text-foreground">
             Nuovo personaggio
           </h2>
-          <form onSubmit={handleCreate} className="space-y-3">
+          <form onSubmit={handleCreate} className="flex flex-col gap-3">
             <Input
               label="Nome personaggio"
               value={form.character_name}
@@ -181,14 +181,14 @@ function CharactersContent() {
           ) : list.length === 0 ? (
             <p className={appMuted}>Nessun personaggio.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="flex flex-col gap-3">
               {list.map((ch) => (
                 <li
                   key={ch.id}
                   className="rounded-lg border border-border bg-card p-4 text-card-foreground"
                 >
                   <span className="font-semibold">{ch.character_name}</span>
-                  <span className={`${appMuted} text-sm block`}>
+                  <span className={`${appMuted} block text-sm leading-relaxed`}>
                     {ch.class_name} {ch.race} · liv. {ch.level}
                   </span>
                 </li>
