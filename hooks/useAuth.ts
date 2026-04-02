@@ -1,77 +1,116 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import type { User, Session } from "@supabase/supabase-js";
+import { getSupabaseBrowser, isSupabaseConfigured } from "@/lib/supabase-browser";
 
-export interface User {
+export type AuthUser = {
   id: string;
-  email: string;
+  email: string | undefined;
   name?: string;
+};
+
+function mapUser(u: User | null): AuthUser | null {
+  if (!u) return null;
+  return {
+    id: u.id,
+    email: u.email,
+    name: u.user_metadata?.name as string | undefined,
+  };
 }
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in (from localStorage or API)
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-      // Fetch user data from API or decode JWT
-      // For now, we'll just set a placeholder
-      setUser({
-        id: "user-id",
-        email: "user@example.com",
-        name: "User",
-      });
+    const supabase = getSupabaseBrowser();
+    if (!supabase) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+
+    let cancelled = false;
+
+    void supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (cancelled) return;
+      setSession(s);
+      setUser(mapUser(s?.user ?? null));
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      setUser(mapUser(s?.user ?? null));
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
+    const supabase = getSupabaseBrowser();
+    if (!supabase) throw new Error("Supabase non configurato (env mancanti).");
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
       });
-      const data = await response.json();
-      if (data.token) {
-        localStorage.setItem("auth_token", data.token);
-        setUser(data.user);
-      }
+      if (error) throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const logout = async () => {
-    setLoading(true);
-    try {
-      localStorage.removeItem("auth_token");
+  const register = useCallback(
+    async (email: string, password: string, name: string) => {
+      const supabase = getSupabaseBrowser();
+      if (!supabase) throw new Error("Supabase non configurato (env mancanti).");
+      setLoading(true);
+      try {
+        const { error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: { data: { name: name.trim() || undefined } },
+        });
+        if (error) throw error;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const logout = useCallback(async () => {
+    const supabase = getSupabaseBrowser();
+    if (!supabase) {
       setUser(null);
-    } finally {
-      setLoading(false);
+      setSession(null);
+      return;
     }
-  };
-
-  const register = async (email: string, password: string, name: string) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
-      });
-      const data = await response.json();
-      if (data.token) {
-        localStorage.setItem("auth_token", data.token);
-        setUser(data.user);
-      }
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  return { user, loading, login, logout, register };
+  return {
+    user,
+    session,
+    loading,
+    login,
+    logout,
+    register,
+    supabaseReady: isSupabaseConfigured(),
+  };
 }

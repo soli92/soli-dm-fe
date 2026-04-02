@@ -8,8 +8,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="data-theme"
-      defaultTheme="light"
-      enableSystem
+      defaultTheme="fantasy"
+      enableSystem={false}
       themes={["light", "dark", "fantasy", "cyberpunk", "90s-party"]}
       storageKey="soli-dm-theme"
     >

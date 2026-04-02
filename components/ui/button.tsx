@@ -14,7 +14,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "font-semibold rounded-lg transition-colors cursor-pointer inline-flex items-center justify-center gap-2";
+    "font-semibold rounded-lg transition-colors cursor-pointer inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none";
 
   const sizeStyles = {
     sm: "px-3 py-1.5 text-sm",
@@ -23,14 +23,17 @@ export function Button({
   };
 
   const variantStyles = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
-    secondary: "bg-gray-600 text-white hover:bg-gray-700 active:bg-gray-800",
+    primary:
+      "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 shadow-sm",
+    secondary:
+      "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70",
     outline:
-      "border-2 border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100",
+      "border-2 border-primary text-primary bg-transparent hover:bg-accent hover:text-accent-foreground",
   };
 
   return (
     <button
+      type="button"
       className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
       {...props}
     >
