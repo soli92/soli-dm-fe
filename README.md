@@ -288,21 +288,35 @@ Mappa Leaflet è adattiva su tutti i dispositivi.
 ### Vercel (Recommended)
 
 ```bash
-# Connetti GitHub a Vercel
-# Seleziona branch `main`
+# Connetti GitHub a Vercel (repository soli92/soli-dm-fe)
+# Production Branch: main
 # Imposta variabili d'ambiente (Environment Variables):
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 NEXT_PUBLIC_API_URL=...
 
-# Deploy automatico a ogni push su main
+# Deploy automatico a ogni push sul branch di produzione
 ```
 
 **URL Produzione:** https://soli-dm-*.vercel.app
 
+Se dopo un push **non compare** un nuovo deployment: in dashboard Vercel → **Settings** → **Git** verifica **Production Branch** = `main`, repository collegato corretto e che **Require Verified Commits** non scarti i tuoi commit (se attivo, firma i commit o disattivalo). Dettaglio in **[SETUP.md](./SETUP.md)** § 4.0 e § 4.3.
+
+### GitHub Actions (CI)
+
+Su **push** e **pull request** verso `main`, [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) esegue in sequenza: `npm ci`, `npm run lint`, `npm run type-check`, `npm test`, `npm run build` (Node **22**, `CI=true`). Allineato allo stile CI usato in altri repo frontend (es. Pippify).
+
 ---
 
 ## 🐛 Troubleshooting
+
+### Vercel: nessun deploy dopo `git push`
+
+- **Production Branch** ≠ branch da cui pushi (es. push su `main` ma produzione è `master`) → allinea in **Settings → Git**.
+- **Require Verified Commits** attivo e commit non firmati → Vercel non crea il deployment.
+- Webhook GitHub verso Vercel in errore → riconnetti il repo da **Settings → Git**.
+
+Vedi **[SETUP.md](./SETUP.md) § 4.3**.
 
 ### Build fallisce con "Module not found"
 - Esegui `npm install` nuovamente

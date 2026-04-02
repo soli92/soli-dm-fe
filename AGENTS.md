@@ -94,6 +94,8 @@ soli-dm-fe/
 **Build Command:** `next build`  
 **Start Command:** `next start`
 
+**Deploy automatico non parte dopo un push:** controllare su Vercel **Settings → Git** (repository collegato, **Production Branch** = `main`, opzione **Require Verified Commits** che annulla deploy su commit non firmati), webhook su GitHub. Procedura: **`SETUP.md`** § 4.0 e § 4.3.
+
 ---
 
 ## 🔧 **FIX APPLICATI (Timeline)**
@@ -241,6 +243,7 @@ npm run lint
 | **Backend Repo** | https://github.com/soli92/soli-dm-be |
 | **Design System** | https://github.com/soli92/solids |
 | **Vercel Dashboard** | https://vercel.com/soli92s-projects/soli-dm-fe |
+| **GitHub Actions (CI)** | `.github/workflows/ci.yml` — su `push`/`pull_request` verso `main`: `lint`, `type-check`, `test`, `build` (Node 22, `npm ci`) |
 | **Supabase Project** | https://supabase.com/dashboard/projects |
 | **Next.js Docs** | https://nextjs.org/docs |
 | **Tailwind Docs** | https://tailwindcss.com/docs |
@@ -254,10 +257,9 @@ npm run lint
 1. **Leggere prima:** `README.md` (user-facing guide)
 2. **Poi:** Questo file (`AGENTS.md`) per lo stato interno
 3. **Stack:** Next.js 15, React 18, TypeScript, Tailwind, @soli92/solids theme
-4. **Build:** ✅ Vercel (auto-deploy su push a `main`)
-5. **Status:** Frontend live, Backend in fix (Render TypeScript path issue)
+4. **Build:** ✅ Vercel (auto-deploy su push a `main`); ✅ CI GitHub su ogni PR/push `main`
+5. **Status:** Frontend live; backend su Render (start script con risoluzione `dist/`)
 6. **Priority:** 
-   - Completare fix backend (Render deployment)
    - Setup Google OAuth (Supabase)
    - Implementare campaign list/detail pages
    - Integrare Leaflet maps
@@ -265,9 +267,11 @@ npm run lint
 ### Comandi rapidi:
 ```bash
 npm run dev          # Test locale
-npm run build        # Pre-deploy check
-npm run type-check   # Verify TypeScript
-git push origin main # Auto-deploy Vercel
+npm run lint         # ESLint (in CI: CI=true)
+npm run type-check   # TypeScript
+npm test             # Vitest
+npm run build        # Pre-deploy check (stessa sequenza della CI)
+git push origin main # Auto-deploy Vercel + run CI su GitHub
 ```
 
 ---

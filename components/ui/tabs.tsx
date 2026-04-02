@@ -43,5 +43,6 @@ export function Tabs({ children, defaultTab = 0 }: TabsProps) {
 }
 
 export function Tab({ label, children }: TabProps) {
+  void label;
   return <>{children}</>;
 }

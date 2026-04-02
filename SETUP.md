@@ -158,6 +158,15 @@ JWT_SECRET=your-random-32-char-secret
 
 ## 4. Vercel Deploy
 
+### 4.0 Git, branch `main` e deploy automatico
+
+Per ogni **push** su GitHub, Vercel crea un deployment solo se il progetto è collegato al repository giusto e il branch coincide con quello di produzione.
+
+1. Dashboard progetto → **Settings** → **Git**
+2. **Connected Git Repository** deve essere **`soli92/soli-dm-fe`** (o il fork/org che usi davvero per i push).
+3. **Production Branch** deve essere **`main`** (se i push sono su `main` e qui è ancora `master`, non partirà il deploy di produzione).
+4. Se hai spostato il repo o rinominato il remoto, usa **Disconnect** e riconnetti il repository così i webhook GitHub si rigenerano.
+
 ### 4.1 Configura Environment Variables su Vercel
 
 1. Vai a https://vercel.com/soli92s-projects/soli-dm-fe
@@ -180,6 +189,20 @@ JWT_SECRET=your-random-32-char-secret
 2. Clicca il 3-dot menu dell'ultimo deployment → **Redeploy**
 3. Aspetta che il build finisca (2-3 minuti)
 4. Clicca il link per visitare il sito
+
+### 4.3 Dopo un push su `main` non parte nessun deployment
+
+Controlla in ordine:
+
+| Cosa verificare | Dove | Azione |
+|-----------------|------|--------|
+| **Commit firmati obbligatori** | Vercel → Settings → **Git** → *Require Verified Commits* | Se è **Enabled**, i commit non firmati su GitHub vengono **ignorati**: disattiva l’opzione oppure [firma i commit](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits). |
+| **Branch sbagliato** | Settings → **Git** → Production Branch | Allinea a **`main`**. |
+| **Repo / webhook** | GitHub → repo → **Settings** → **Webhooks** | Cerca webhook Vercel con consegne recenti in errore; in caso riconnetti Git da Vercel. |
+| **Progetto in pausa** | Dashboard team | Controlla che il progetto non sia disabilitato o fuori quota (piano Hobby). |
+| **Ignora build** | Settings → **Git** → *Ignored Build Step* | Se presente uno script che esce con `0` senza build, i deploy vengono saltati. |
+
+**Workaround immediato:** **Deployments** → **Create Deployment** (se disponibile) oppure **Redeploy** sull’ultimo deploy, oppure crea un [**Deploy Hook**](https://vercel.com/docs/deploy-hooks) e chiamalo con `POST` da GitHub Actions o a mano.
 
 ---
 
