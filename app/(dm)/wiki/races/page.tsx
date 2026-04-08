@@ -4,7 +4,14 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { getRaces } from "@/lib/api";
 import { useAsyncList } from "@/hooks/useAsyncList";
-import { appLinkBack, appListItem, appMuted, appPageTitle } from "@/lib/ui-classes";
+import {
+  appLinkBack,
+  appListItem,
+  appMuted,
+  appPageShell,
+  appPageTitle,
+  appSectionLabel,
+} from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 export default function WikiRacesPage() {
@@ -15,23 +22,26 @@ export default function WikiRacesPage() {
   }, [error]);
 
   return (
-    <main className="px-4 py-8">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <main className={appPageShell}>
+      <div className="space-y-8">
         <Link href="/wiki" className={appLinkBack}>
           ← Wiki
         </Link>
-        <h1 className={appPageTitle}>Razze</h1>
+        <header className="space-y-2">
+          <p className={appSectionLabel}>Wiki 5e</p>
+          <h1 className={appPageTitle}>Razze</h1>
+        </header>
         {loading ? (
           <p className={appMuted}>Caricamento…</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="flex flex-col gap-3">
             {list.map((r) => (
               <li key={r.name}>
                 <Link
                   href={`/wiki/races/${encodeURIComponent(r.name)}`}
                   className={appListItem}
                 >
-                  {r.name}
+                  <span className="font-semibold text-foreground">{r.name}</span>
                 </Link>
               </li>
             ))}

@@ -42,3 +42,16 @@ html[data-theme="cyberpunk"] {
 html[data-theme="90s-party"] {
   color-scheme: dark;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Link focus visibile (oltre ai componenti). */
+@layer base {
+  a:focus-visible {
+    @apply rounded-sm outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}

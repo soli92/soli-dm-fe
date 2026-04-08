@@ -5,7 +5,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getRuleCategory } from "@/lib/api";
 import { useResourceByParam } from "@/hooks/useResourceByParam";
-import { appLinkBack, appMuted, appPageTitle, appPanel } from "@/lib/ui-classes";
+import {
+  appLinkBack,
+  appMuted,
+  appPageShell,
+  appPageTitle,
+  appPanelStack,
+  appSectionLabel,
+} from "@/lib/ui-classes";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 function titleFromRulePayload(data: unknown, fallback: string): string {
@@ -36,8 +44,8 @@ export default function WikiRuleCategoryPage() {
   }, [error]);
 
   return (
-    <main className="px-4 py-8">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <main className={appPageShell}>
+      <div className="space-y-8">
         <Link href="/wiki/rules" className={appLinkBack}>
           ← Regole
         </Link>
@@ -46,14 +54,20 @@ export default function WikiRuleCategoryPage() {
         ) : error ? (
           <p className={appMuted}>Impossibile caricare la categoria.</p>
         ) : (
-          <>
-            <h1 className={appPageTitle}>{heading}</h1>
+          <article className={appPanelStack}>
+            <header className="space-y-1 border-b border-border/60 pb-4">
+              <p className={appSectionLabel}>Regole</p>
+              <h1 className={appPageTitle}>{heading}</h1>
+            </header>
             <pre
-              className={`${appPanel} text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap font-mono`}
+              className={cn(
+                "max-h-[min(70vh,32rem)] overflow-auto break-words rounded-xl border border-border/60 bg-muted/30 p-4 text-xs leading-relaxed text-muted-foreground",
+                "whitespace-pre-wrap font-mono sm:text-sm"
+              )}
             >
               {JSON.stringify(data, null, 2)}
             </pre>
-          </>
+          </article>
         )}
       </div>
     </main>

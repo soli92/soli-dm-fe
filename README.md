@@ -41,10 +41,11 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
 - **20+ Divinità** (Forgotten Realms)
 - **Core Rules**: Ability Scores, Combat, Saving Throws, Resting, Multiclassing
 
-### 🎨 Tema Fantasy
-- Tema dark/light con **Fantasy** (serif Cinzel, colori pergamena)
-- Theme switcher
-- Responsive design
+### 🎨 UI e tema (SoliDS)
+- **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk)
+- Layout ispirato a **Material Design 3** (shell pagina, pannelli, tipografia) tramite classi condivise in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, …) e primitive in `components/ui/`
+- **next-themes** — theme switcher in navbar
+- PWA: **@ducanh2912/next-pwa** (service worker in produzione; vedi nota in `AGENTS.md` su cache cross-origin e API)
 
 ---
 
@@ -129,68 +130,40 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 
 # Backend API
 NEXT_PUBLIC_API_URL=https://soli-dm-be.onrender.com
+
+# Opzionale: solo se sul backend è impostata SOLI_DM_API_KEY (stesso valore, esposto al client)
+# NEXT_PUBLIC_SOLI_DM_API_KEY=
 ```
 
 ---
 
-## 📁 Struttura Directory
+## 📁 Struttura directory (sintesi)
 
 ```
-src/
-├── app/
-│   ├── layout.tsx                 (Layout principale con tema)
-│   ├── page.tsx                   (Home page)
-│   ├── globals.css                (CSS globale)
-│   ├── auth/
-│   │   └── callback/route.ts      (OAuth callback)
-│   ├── dashboard/
-│   │   ├── layout.tsx             (Layout dashboard)
-│   │   └── page.tsx               (Dashboard principale)
-│   └── campaigns/
-│       └── [id]/
-│           └── page.tsx           (Dettagli campagna)
-│
-├── components/
-│   ├── navigation.tsx             (Navbar)
-│   ├── dashboard-sidebar.tsx      (Sidebar dashboard)
-│   ├── theme-provider.tsx         (Theme context)
-│   ├── theme-switcher.tsx         (Theme selector)
-│   ├── login-form.tsx             (Login con Google)
-│   ├── campaigns/
-│   │   ├── campaign-list.tsx
-│   │   ├── campaign-detail.tsx
-│   │   ├── campaign-form.tsx
-│   │   ├── campaign-notes.tsx
-│   │   └── campaign-members.tsx
-│   ├── map/
-│   │   └── campaign-map.tsx       (Mappa Leaflet)
-│   ├── dice/
-│   │   ├── dice-roller.tsx
-│   │   └── dice-history.tsx
-│   ├── wiki/
-│   │   ├── classes-list.tsx
-│   │   ├── races-list.tsx
-│   │   ├── deities-list.tsx
-│   │   └── rules-list.tsx
-│   └── ui/
-│       ├── button.tsx
-│       ├── tabs.tsx
-│       ├── textarea.tsx
-│       └── ...
-│
-├── hooks/
-│   ├── useAuth.ts                 (Auth + Google login)
-│   ├── useCampaigns.ts            (Campaign CRUD)
-│   ├── useCharacters.ts           (Character CRUD)
-│   ├── useDice.ts                 (Dice roller)
-│   └── useWiki.ts                 (Wiki data)
-│
-└── lib/
-    ├── api.ts                     (Client API)
-    ├── auth.ts                    (Auth helpers)
-    ├── supabase.ts                (Supabase client)
-    ├── utils.ts                   (Utilities)
-    └── map.ts                     (Map utilities)
+app/
+├── layout.tsx, providers.tsx, globals.css    # root: tema, Toaster, font
+├── auth/callback/route.ts                    # OAuth Supabase
+└── (dm)/                                     # area gioco / wiki
+    ├── layout.tsx                            # skip link, canvas, #main-content
+    ├── page.tsx                              # home
+    ├── login/, register/
+    ├── campaigns/, campaigns/[id]/
+    ├── characters/, dice-roller/
+    └── wiki/ … (classes, races, deities, rules + route dinamiche)
+
+components/
+├── navigation.tsx, theme-switcher.tsx
+└── ui/                                       # button, card, input, …
+
+lib/
+├── api.ts, supabase.ts, auth.ts
+├── auth-errors.ts                            # messaggi IT per errori Auth
+├── ui-classes.ts                             # classi layout / tipografia condivise
+└── utils.ts                                  # cn (clsx + tailwind-merge)
+
+tests/                                        # Vitest (+ Testing Library dove serve)
+├── auth-errors.test.ts, utils.test.ts
+├── client.test.ts, useCampaigns.test.tsx
 ```
 
 ---
@@ -226,39 +199,40 @@ NEXT_PUBLIC_API_URL=https://soli-dm-be.onrender.com
 # Dev server (hot reload)
 npm run dev
 
+# Test unitari (Vitest — stessa suite in CI)
+npm test
+npm run test:watch   # modalità watch
+
 # Type check
 npm run type-check
 
-# Lint (se configurato)
+# Lint
 npm run lint
 
-# Build per production
+# Build per production (include generazione icone PWA)
 npm run build
 
 # Avvia build prodotto
 npm start
 ```
 
-### Aggiungere un componente UI
+### Test
 
-Usa **shadcn/ui** (o crea manualmente):
+- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, hook campagne, `formatAuthError`, `cn`, …).
+- In **CI** (`.github/workflows/ci.yml`): `npm ci` poi `lint` → `type-check` → `test` → `build`.
 
-```bash
-# Esempio button (già incluso)
-# Components sono in components/ui/
-```
+### Componenti UI
+
+Primitive in **`components/ui/`** (Button, Card, Input, …), stile allineato a SoliDS + token in `globals.css`. Per classi condizionali usare **`cn`** da `lib/utils.ts`.
 
 ---
 
 ## 🎨 Tema
 
-Il frontend supporta più temi via **CSS variables**:
-- **Light** — Tema chiaro
-- **Dark** — Tema scuro
-- **Fantasy** — Tema fantasy D&D (Cinzel serif, colori pergamena)
-- **Cyberpunk** — Tema cyberpunk (neon colors)
+I temi sono forniti da **SoliDS** (`data-theme` su `<html>`) e **next-themes**:
+- **light**, **dark**, **fantasy**, **cyberpunk**, **90s-party**, **steampunk**
 
-Cambia tema con il **theme switcher** nella navbar.
+Il **theme switcher** è nella navbar.
 
 ---
 
@@ -294,6 +268,8 @@ Mappa Leaflet è adattiva su tutti i dispositivi.
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 NEXT_PUBLIC_API_URL=...
+# Opzionale, solo se il backend richiede la chiave:
+# NEXT_PUBLIC_SOLI_DM_API_KEY=...
 
 # Deploy automatico a ogni push sul branch di produzione
 ```
@@ -337,6 +313,10 @@ Vedi **[SETUP.md](./SETUP.md) § 4.3**.
 - Verifica che `NEXT_PUBLIC_API_URL` sia corretto
 - Controlla che il backend sia online: `curl https://soli-dm-be.onrender.com/health`
 - Verifica **CORS** nel backend
+
+### PWA / Service Worker e API
+- In produzione Workbox non intercetta le richieste GET verso la base URL del backend (configurata a build time da `NEXT_PUBLIC_API_URL` più fallback documentato in `next.config.ts`), così si evitano errori tipo **no-response** su fetch cross-origin verso l’API.
+- Dopo un cambio di dominio API, imposta le variabili Vercel e **ridistribuisci** così `public/sw.js` rigenera i prefissi corretti.
 
 ---
 

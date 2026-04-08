@@ -6,7 +6,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { appMuted, appPageTitle, appPanelStack } from "@/lib/ui-classes";
+import { formatAuthError } from "@/lib/auth-errors";
+import {
+  appMuted,
+  appPageTitle,
+  appPanelStack,
+  appSectionLabel,
+} from "@/lib/ui-classes";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function LoginPage() {
@@ -30,23 +37,33 @@ export default function LoginPage() {
       toast.success("Accesso effettuato.");
       router.push("/campaigns");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Login fallito");
+      toast.error(formatAuthError(err));
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <main className="px-4 py-12 flex justify-center">
-      <div className="w-full max-w-md space-y-6">
-        <h1 className={`${appPageTitle} text-center`}>Accedi</h1>
+    <main className="flex justify-center px-4 py-10 sm:py-14">
+      <div className="w-full max-w-md space-y-8">
+        <header className="space-y-2 text-center">
+          <p className={appSectionLabel}>Account</p>
+          <h1 className={appPageTitle}>Accedi</h1>
+          <p className={cn(appMuted, "text-sm")}>
+            Usa le credenziali del tuo progetto Supabase.
+          </p>
+        </header>
         {!supabaseReady && (
           <p
-            className={`${appMuted} text-sm text-center rounded-lg border border-border bg-muted/40 p-3`}
+            className={cn(
+              appMuted,
+              "rounded-2xl border border-border/80 bg-card p-4 text-center text-sm shadow-sm"
+            )}
+            role="status"
           >
-            Supabase non configurato: aggiungi le variabili{" "}
-            <code className="text-xs text-foreground">NEXT_PUBLIC_SUPABASE_*</code> in{" "}
-            <code className="text-xs text-foreground">.env.local</code>.
+            Supabase non configurato: aggiungi{" "}
+            <code className="text-foreground">NEXT_PUBLIC_SUPABASE_*</code> in{" "}
+            <code className="text-foreground">.env.local</code>.
           </p>
         )}
         <form onSubmit={handleSubmit} className={appPanelStack}>
@@ -70,9 +87,12 @@ export default function LoginPage() {
             {submitting ? "Accesso…" : "Entra"}
           </Button>
         </form>
-        <p className={`${appMuted} text-center text-sm`}>
+        <p className={cn(appMuted, "text-center text-sm")}>
           Non hai un account?{" "}
-          <Link href="/register" className="text-primary hover:underline font-medium">
+          <Link
+            href="/register"
+            className="font-semibold text-primary underline-offset-4 hover:underline"
+          >
             Registrati
           </Link>
         </p>

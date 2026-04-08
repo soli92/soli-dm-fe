@@ -9,9 +9,13 @@ import type { CreateCampaignInput } from "@/lib/types";
 import {
   appListItem,
   appMuted,
+  appPageShell,
   appPageTitle,
   appPanelStack,
+  appSectionLabel,
+  appTitle,
 } from "@/lib/ui-classes";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function CampaignsPage() {
@@ -56,13 +60,21 @@ export default function CampaignsPage() {
   }
 
   return (
-    <main className="px-4 py-8">
-      <div className="max-w-3xl mx-auto space-y-8">
-        <h1 className={appPageTitle}>Campagne</h1>
+    <main className={appPageShell}>
+      <div className="space-y-10">
+        <header className="space-y-2">
+          <p className={appSectionLabel}>Gestione tavolo</p>
+          <h1 className={appPageTitle}>Campagne</h1>
+          <p className={cn(appMuted, "max-w-xl text-base")}>
+            Crea una campagna e collega personaggi e lanci dadi.
+          </p>
+        </header>
 
-        <section className={appPanelStack}>
-          <h2 className="text-lg font-semibold font-serif text-foreground">Nuova campagna</h2>
-          <form onSubmit={handleCreate} className="flex flex-col gap-3">
+        <section className={appPanelStack} aria-labelledby="new-campaign-heading">
+          <h2 id="new-campaign-heading" className={appTitle}>
+            Nuova campagna
+          </h2>
+          <form onSubmit={handleCreate} className="flex flex-col gap-4">
             <Input
               label="Nome"
               value={form.name}
@@ -104,8 +116,8 @@ export default function CampaignsPage() {
           </form>
         </section>
 
-        <section>
-          <h2 className="text-lg font-semibold font-serif mb-3 text-foreground">
+        <section aria-labelledby="campaign-list-heading">
+          <h2 id="campaign-list-heading" className={cn(appTitle, "mb-4")}>
             Le tue campagne
           </h2>
           {loading ? (
@@ -118,10 +130,12 @@ export default function CampaignsPage() {
                 <li key={c.id}>
                   <Link
                     href={`/campaigns/${c.id}`}
-                    className={`${appListItem} flex flex-col gap-1 p-4`}
+                    className={cn(appListItem, "flex flex-col gap-1")}
                   >
-                    <span className="font-semibold text-foreground">{c.name}</span>
-                    <span className={`${appMuted} block text-sm leading-relaxed`}>
+                    <span className="text-base font-semibold text-foreground">
+                      {c.name}
+                    </span>
+                    <span className={cn(appMuted, "block text-sm leading-relaxed")}>
                       DM: {c.dm_name}
                       {c.world_setting ? ` · ${c.world_setting}` : ""}
                     </span>

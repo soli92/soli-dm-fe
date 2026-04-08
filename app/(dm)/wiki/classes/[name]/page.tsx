@@ -5,7 +5,16 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getClassByName } from "@/lib/api";
 import { useResourceByParam } from "@/hooks/useResourceByParam";
-import { appLinkBack, appMuted, appPageTitle } from "@/lib/ui-classes";
+import {
+  appBody,
+  appLinkBack,
+  appMuted,
+  appPageShell,
+  appPageTitle,
+  appPanelStack,
+  appSectionLabel,
+} from "@/lib/ui-classes";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function WikiClassDetailPage() {
@@ -19,8 +28,8 @@ export default function WikiClassDetailPage() {
   }, [error]);
 
   return (
-    <main className="px-4 py-8">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <main className={appPageShell}>
+      <div className="space-y-8">
         <Link href="/wiki/classes" className={appLinkBack}>
           ← Classi
         </Link>
@@ -29,28 +38,43 @@ export default function WikiClassDetailPage() {
         ) : !c ? (
           <p className={appMuted}>Classe non trovata.</p>
         ) : (
-          <>
-            <h1 className={appPageTitle}>{c.name}</h1>
-            <p className="text-foreground/90">{c.description}</p>
-            <dl className="grid gap-2 text-sm text-muted-foreground">
+          <article className={appPanelStack}>
+            <header className="space-y-1 border-b border-border/60 pb-4">
+              <p className={appSectionLabel}>Classe</p>
+              <h1 className={appPageTitle}>{c.name}</h1>
+            </header>
+            <p className={cn(appBody, "leading-relaxed text-foreground/95")}>
+              {c.description}
+            </p>
+            <dl className="grid gap-4 border-t border-border/60 pt-4 text-sm">
               <div>
-                <dt className="text-foreground/70">Dado vita</dt>
-                <dd>{c.hit_die}</dd>
+                <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>
+                  Dado vita
+                </dt>
+                <dd className="mt-1 text-foreground">{c.hit_die}</dd>
               </div>
               <div>
-                <dt className="text-foreground/70">Caratteristica primaria</dt>
-                <dd>{c.primary_ability}</dd>
+                <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>
+                  Caratteristica primaria
+                </dt>
+                <dd className="mt-1 text-foreground">{c.primary_ability}</dd>
               </div>
               <div>
-                <dt className="text-foreground/70">Tiri salvezza</dt>
-                <dd>{c.saving_throws.join(", ")}</dd>
+                <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>
+                  Tiri salvezza
+                </dt>
+                <dd className="mt-1 text-foreground">{c.saving_throws.join(", ")}</dd>
               </div>
               <div>
-                <dt className="text-foreground/70">Tratti</dt>
-                <dd>{c.features.join(", ")}</dd>
+                <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>
+                  Tratti
+                </dt>
+                <dd className="mt-1 leading-relaxed text-foreground">
+                  {c.features.join(", ")}
+                </dd>
               </div>
             </dl>
-          </>
+          </article>
         )}
       </div>
     </main>

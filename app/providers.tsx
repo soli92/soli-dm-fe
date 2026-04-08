@@ -14,7 +14,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
       storageKey="soli-dm-theme"
     >
       {children}
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-center"
+        closeButton
+        richColors
+        toastOptions={{
+          classNames: {
+            toast:
+              "rounded-2xl border border-border/80 bg-card text-card-foreground shadow-lg",
+          },
+        }}
+      />
     </ThemeProvider>
   );
 }

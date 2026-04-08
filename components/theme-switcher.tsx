@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 const THEMES = [
   { id: "fantasy", label: "Fantasy" },
@@ -21,20 +22,26 @@ export function ThemeSwitcher() {
 
   if (!mounted) {
     return (
-      <span className="h-8 w-[7rem] inline-block rounded-md border border-border bg-muted/30" />
+      <span
+        className="inline-block h-11 min-w-[8.5rem] rounded-full border border-border/80 bg-muted/40 sm:h-10"
+        aria-hidden
+      />
     );
   }
 
   const current = theme ?? resolvedTheme ?? "fantasy";
 
   return (
-    <label className="flex items-center gap-2 text-sm text-muted-foreground">
-      <span className="hidden sm:inline">Tema</span>
+    <label className="flex min-h-11 items-center gap-2 text-muted-foreground sm:min-h-10">
+      <span className="hidden text-sm sm:inline">Tema</span>
       <select
         value={current}
         onChange={(e) => setTheme(e.target.value)}
-        className="rounded-md border border-border bg-background px-2 py-1 text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-        aria-label="Seleziona tema"
+        className={cn(
+          "min-h-11 w-[min(100%,9rem)] rounded-full border-2 border-border/80 bg-background px-3 py-2 text-sm text-foreground sm:min-h-10",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        )}
+        aria-label="Seleziona tema colore"
       >
         {THEMES.map((t) => (
           <option key={t.id} value={t.id}>

@@ -7,7 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCampaigns, getCharacters, createCharacter } from "@/lib/api";
 import type { Campaign, Character } from "@/lib/types";
-import { appMuted, appPageTitle, appPanelStack } from "@/lib/ui-classes";
+import {
+  appMuted,
+  appPageShell,
+  appPageTitle,
+  appPanelStack,
+  appSelectField,
+  appTitle,
+} from "@/lib/ui-classes";
 import { toast } from "sonner";
 
 function CharactersContent() {
@@ -92,30 +99,26 @@ function CharactersContent() {
     }
   }
 
-  const selectClass =
-    "w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
-
   return (
-    <main className="px-4 py-8">
-      <div className="max-w-3xl mx-auto space-y-8">
-        <div className="flex justify-between items-center flex-wrap gap-2">
+    <main className={appPageShell}>
+      <div className="space-y-10">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className={appPageTitle}>Personaggi</h1>
           <Link
             href="/campaigns"
-            className="text-sm text-primary hover:underline font-medium"
+            className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
           >
             Gestisci campagne
           </Link>
         </div>
 
         <section className={appPanelStack}>
-          <h2 className="text-lg font-semibold font-serif text-foreground">
-            Filtra per campagna
-          </h2>
+          <h2 className={appTitle}>Filtra per campagna</h2>
           <select
             value={campaignId}
             onChange={(e) => setCampaignId(e.target.value)}
-            className={selectClass}
+            className={appSelectField}
+            aria-label="Filtra personaggi per campagna"
           >
             <option value="">Tutte le campagne</option>
             {campaigns.map((c) => (
@@ -127,10 +130,8 @@ function CharactersContent() {
         </section>
 
         <section className={appPanelStack}>
-          <h2 className="text-lg font-semibold font-serif text-foreground">
-            Nuovo personaggio
-          </h2>
-          <form onSubmit={handleCreate} className="flex flex-col gap-3">
+          <h2 className={appTitle}>Nuovo personaggio</h2>
+          <form onSubmit={handleCreate} className="flex flex-col gap-4">
             <Input
               label="Nome personaggio"
               value={form.character_name}
@@ -173,9 +174,7 @@ function CharactersContent() {
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold font-serif mb-3 text-foreground">
-            Lista
-          </h2>
+          <h2 className={`${appTitle} mb-4`}>Lista</h2>
           {loading ? (
             <p className={appMuted}>Caricamento…</p>
           ) : list.length === 0 ? (
@@ -185,7 +184,7 @@ function CharactersContent() {
               {list.map((ch) => (
                 <li
                   key={ch.id}
-                  className="rounded-lg border border-border bg-card p-4 text-card-foreground"
+                  className="rounded-2xl border border-border/80 bg-card p-4 text-card-foreground shadow-sm"
                 >
                   <span className="font-semibold">{ch.character_name}</span>
                   <span className={`${appMuted} block text-sm leading-relaxed`}>
@@ -205,7 +204,9 @@ export default function CharactersPage() {
   return (
     <Suspense
       fallback={
-        <div className="px-4 py-8 text-muted-foreground">Caricamento…</div>
+        <main className={appPageShell}>
+          <p className={appMuted}>Caricamento…</p>
+        </main>
       }
     >
       <CharactersContent />
