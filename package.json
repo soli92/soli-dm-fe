@@ -16,7 +16,7 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@hookform/resolvers": "^5.2.2",
-    "@soli92/solids": "^1.4.0",
+    "@soli92/solids": "^1.5.0",
     "@supabase/supabase-js": "^2.43.3",
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
