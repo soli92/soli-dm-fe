@@ -32,6 +32,7 @@ export default function WikiHomePage() {
             <Link
               key={c.href}
               href={c.href}
+              aria-label={`Wiki: ${c.title}`}
               className={cn(
                 appPanel,
                 "flex min-h-[5.5rem] items-center gap-4 no-underline",

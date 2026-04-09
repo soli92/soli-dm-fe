@@ -14,6 +14,7 @@ import {
   appPanelStack,
   appSectionLabel,
 } from "@/lib/ui-classes";
+import { formatInlineText } from "@/lib/wiki/format";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -28,13 +29,19 @@ export default function WikiDeityDetailPage() {
   }, [error]);
 
   return (
-    <main className={appPageShell}>
+    <main className={appPageShell} aria-busy={loading}>
       <div className="space-y-8">
-        <Link href="/wiki/deities" className={appLinkBack}>
+        <Link
+          href="/wiki/deities"
+          className={appLinkBack}
+          aria-label={"Torna all'elenco divinità"}
+        >
           ← Divinità
         </Link>
         {loading ? (
-          <p className={appMuted}>Caricamento…</p>
+          <p className={appMuted} role="status">
+            Caricamento…
+          </p>
         ) : !d ? (
           <p className={appMuted}>Divinità non trovata.</p>
         ) : (
@@ -65,7 +72,7 @@ export default function WikiDeityDetailPage() {
                   Fedeli tipici
                 </dt>
                 <dd className="mt-1 leading-relaxed text-foreground">
-                  {d.typical_worshippers}
+                  {formatInlineText(d.typical_worshippers)}
                 </dd>
               </div>
             </dl>

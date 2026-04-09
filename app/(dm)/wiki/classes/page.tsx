@@ -22,18 +22,23 @@ export default function WikiClassesPage() {
   }, [error]);
 
   return (
-    <main className={appPageShell}>
+    <main className={appPageShell} aria-busy={loading}>
       <div className="space-y-8">
-        <Link href="/wiki" className={appLinkBack}>
+        <Link href="/wiki" className={appLinkBack} aria-label={"Torna alla wiki"}>
           ← Wiki
         </Link>
         <header className="space-y-2">
           <p className={appSectionLabel}>Wiki 5e</p>
-          <h1 className={appPageTitle}>Classi</h1>
+          <h1 className={appPageTitle} id="wiki-classes-title">
+            Classi
+          </h1>
         </header>
         {loading ? (
-          <p className={appMuted}>Caricamento…</p>
+          <p className={appMuted} role="status">
+            Caricamento…
+          </p>
         ) : (
+          <nav aria-labelledby="wiki-classes-title">
           <ul className="flex flex-col gap-3">
             {list.map((c) => (
               <li key={c.name}>
@@ -46,6 +51,7 @@ export default function WikiClassesPage() {
               </li>
             ))}
           </ul>
+          </nav>
         )}
       </div>
     </main>

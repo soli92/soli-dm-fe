@@ -107,7 +107,8 @@ export type WikiDeity = {
   domain: string;
   description: string;
   holy_symbol: string;
-  typical_worshippers: string;
+  /** Il backend può restituire stringa o array (es. Moradin). */
+  typical_worshippers: string | string[];
 };
 
 export type WikiRuleCategoryMeta = {

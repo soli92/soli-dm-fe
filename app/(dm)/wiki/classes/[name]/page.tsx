@@ -28,13 +28,19 @@ export default function WikiClassDetailPage() {
   }, [error]);
 
   return (
-    <main className={appPageShell}>
+    <main className={appPageShell} aria-busy={loading}>
       <div className="space-y-8">
-        <Link href="/wiki/classes" className={appLinkBack}>
+        <Link
+          href="/wiki/classes"
+          className={appLinkBack}
+          aria-label={"Torna all'elenco classi"}
+        >
           ← Classi
         </Link>
         {loading ? (
-          <p className={appMuted}>Caricamento…</p>
+          <p className={appMuted} role="status">
+            Caricamento…
+          </p>
         ) : !c ? (
           <p className={appMuted}>Classe non trovata.</p>
         ) : (
@@ -64,6 +70,18 @@ export default function WikiClassDetailPage() {
                   Tiri salvezza
                 </dt>
                 <dd className="mt-1 text-foreground">{c.saving_throws.join(", ")}</dd>
+              </div>
+              <div>
+                <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>
+                  Armature
+                </dt>
+                <dd className="mt-1 text-foreground">{c.armor_proficiency}</dd>
+              </div>
+              <div>
+                <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>
+                  Armi
+                </dt>
+                <dd className="mt-1 text-foreground">{c.weapon_proficiency}</dd>
               </div>
               <div>
                 <dt className={cn(appMuted, "text-xs font-semibold uppercase tracking-wide")}>

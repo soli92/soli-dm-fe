@@ -13,7 +13,7 @@ import {
   appPanelStack,
   appSectionLabel,
 } from "@/lib/ui-classes";
-import { cn } from "@/lib/utils";
+import { RuleCategoryContent } from "@/components/wiki/RuleCategoryContent";
 import { toast } from "sonner";
 
 function titleFromRulePayload(data: unknown, fallback: string): string {
@@ -44,29 +44,32 @@ export default function WikiRuleCategoryPage() {
   }, [error]);
 
   return (
-    <main className={appPageShell}>
+    <main className={appPageShell} aria-busy={loading}>
       <div className="space-y-8">
-        <Link href="/wiki/rules" className={appLinkBack}>
+        <Link
+          href="/wiki/rules"
+          className={appLinkBack}
+          aria-label={"Torna all'indice delle regole"}
+        >
           ← Regole
         </Link>
         {loading ? (
-          <p className={appMuted}>Caricamento…</p>
+          <p className={appMuted} role="status">
+            Caricamento…
+          </p>
         ) : error ? (
-          <p className={appMuted}>Impossibile caricare la categoria.</p>
+          <p className={appMuted} role="alert">
+            Impossibile caricare la categoria.
+          </p>
         ) : (
-          <article className={appPanelStack}>
+          <article className={appPanelStack} aria-labelledby="wiki-rule-cat-title">
             <header className="space-y-1 border-b border-border/60 pb-4">
               <p className={appSectionLabel}>Regole</p>
-              <h1 className={appPageTitle}>{heading}</h1>
+              <h1 id="wiki-rule-cat-title" className={appPageTitle}>
+                {heading}
+              </h1>
             </header>
-            <pre
-              className={cn(
-                "max-h-[min(70vh,32rem)] overflow-auto break-words rounded-xl border border-border/60 bg-muted/30 p-4 text-xs leading-relaxed text-muted-foreground",
-                "whitespace-pre-wrap font-mono sm:text-sm"
-              )}
-            >
-              {JSON.stringify(data, null, 2)}
-            </pre>
+            <RuleCategoryContent categoryId={category} data={data} />
           </article>
         )}
       </div>

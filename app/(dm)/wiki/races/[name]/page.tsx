@@ -28,13 +28,19 @@ export default function WikiRaceDetailPage() {
   }, [error]);
 
   return (
-    <main className={appPageShell}>
+    <main className={appPageShell} aria-busy={loading}>
       <div className="space-y-8">
-        <Link href="/wiki/races" className={appLinkBack}>
+        <Link
+          href="/wiki/races"
+          className={appLinkBack}
+          aria-label={"Torna all'elenco razze"}
+        >
           ← Razze
         </Link>
         {loading ? (
-          <p className={appMuted}>Caricamento…</p>
+          <p className={appMuted} role="status">
+            Caricamento…
+          </p>
         ) : !r ? (
           <p className={appMuted}>Razza non trovata.</p>
         ) : (
