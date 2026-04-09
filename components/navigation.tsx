@@ -107,8 +107,7 @@ function SidebarNavContent({ onNavigate }: SidebarNavContentProps) {
             <ThemeSwitcher layout="stacked" />
             <Button
               variant="outline"
-              size="md"
-              className="w-full"
+              className="w-full min-h-10"
               onClick={handleLogout}
             >
               Esci

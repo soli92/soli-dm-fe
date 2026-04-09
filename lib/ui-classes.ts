@@ -4,6 +4,7 @@
  */
 
 import { cn } from "@/lib/utils";
+import { solidsNativeSelectTrigger } from "@/lib/solids-native-classes";
 
 /** Superficie principale delle pagine (sfondo sotto le card). Mobile: sotto header compatto; desktop: altezza viewport con sidebar. */
 export const appCanvas =
@@ -52,11 +53,8 @@ export const appBody = "text-base leading-relaxed text-foreground";
 
 export const appBodySmall = "text-sm leading-relaxed text-muted-foreground";
 
-/** Select allineato ai campi testo (outlined). */
-export const appSelectField = cn(
-  "min-h-12 w-full rounded-xl border-2 border-input bg-background px-4 py-3 text-base text-foreground",
-  "focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-);
+/** Select nativo: stesso linguaggio visivo di SelectTrigger SoliDS + altezza minima form. */
+export const appSelectField = cn(solidsNativeSelectTrigger, "min-h-10");
 
 /** @deprecated Usa appDisplay / appHeadline; mantenuto per compatibilità import. */
 export const appPageTitle = appHeadline;

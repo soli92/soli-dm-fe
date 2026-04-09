@@ -46,8 +46,10 @@ Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **all
 
 ### 🎨 UI e tema (SoliDS)
 - **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk)
-- Layout ispirato a **Material Design 3** (shell pagina, pannelli, tipografia) tramite classi condivise in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, …) e primitive in `components/ui/`
-- **next-themes** — theme switcher in navbar
+- **Componenti UI** in `components/ui/`: allineati al **registry React** del design system ([repo solids](https://github.com/soli92/solids) → `registry/solids/*`) — `Button` (class-variance-authority + Radix Slot), `Card` (compound), `Input` / `Textarea`, `Tabs` (Radix), `Avatar` (Radix). Il pacchetto npm **non** esporta questi file: restano copia curata in app.
+- **`<select>` nativi** (form, theme switcher): classi condivise `solidsNativeSelectTrigger` in `lib/solids-native-classes.ts` e `appSelectField` in `lib/ui-classes.ts` (stesso linguaggio visivo del `SelectTrigger` del registry).
+- Layout shell: classi in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, …) e **sidebar** di navigazione (`components/navigation.tsx`)
+- **next-themes** — selezione tema nel **pannello laterale** (desktop) o nel drawer (mobile)
 - PWA: **@ducanh2912/next-pwa** (service worker in produzione; vedi nota in `AGENTS.md` su cache cross-origin e API)
 
 ---
@@ -155,18 +157,19 @@ app/
     └── wiki/ … (classes, races, deities, rules + route dinamiche)
 
 components/
-├── navigation.tsx, theme-switcher.tsx
-└── ui/                                       # button, card, input, …
+├── navigation.tsx, theme-switcher.tsx, UserAvatar.tsx
+└── ui/                                       # button, card, input, textarea, tabs, avatar (SoliDS registry)
 
 lib/
 ├── api.ts, supabase.ts, auth.ts
 ├── auth-errors.ts                            # messaggi IT per errori Auth
+├── solids-native-classes.ts                  # stile `<select>` allineato a SoliDS SelectTrigger
 ├── tipologiche/                              # liste D&D / app / dadi / wiki (re-export index.ts)
 ├── ui-classes.ts                             # classi layout / tipografia condivise
 └── utils.ts                                  # cn (clsx + tailwind-merge)
 
 tests/                                        # Vitest (+ Testing Library dove serve)
-├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts
+├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts, solids-ui.test.ts
 ├── client.test.ts, useCampaigns.test.tsx
 ```
 
@@ -222,12 +225,12 @@ npm start
 
 ### Test
 
-- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, hook campagne, tipologiche, `formatAuthError`, `cn`, …).
+- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, hook campagne, tipologiche, primitive UI SoliDS, `formatAuthError`, `cn`, …).
 - In **CI** (`.github/workflows/ci.yml`): `npm ci` poi `lint` → `type-check` → `test` → `build`.
 
 ### Componenti UI
 
-Primitive in **`components/ui/`** (Button, Card, Input, …), stile allineato a SoliDS + token in `globals.css`. Per classi condizionali usare **`cn`** da `lib/utils.ts`.
+Primitive in **`components/ui/`** — varianti e classi come il **registry SoliDS** (non duplicare pattern shadcn/MUI esterni). Token da `globals.css` / `@soli92/solids/css`. Classi condizionali: **`cn`** in `lib/utils.ts`.
 
 ---
 
@@ -236,7 +239,7 @@ Primitive in **`components/ui/`** (Button, Card, Input, …), stile allineato a 
 I temi sono forniti da **SoliDS** (`data-theme` su `<html>`) e **next-themes**:
 - **light**, **dark**, **fantasy**, **cyberpunk**, **90s-party**, **steampunk**
 
-Il **theme switcher** è nella navbar.
+Il **theme switcher** è nel **menu laterale** (area utente in basso) su desktop e nel drawer su mobile.
 
 ---
 

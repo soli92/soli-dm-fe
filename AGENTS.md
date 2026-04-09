@@ -1,6 +1,6 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-09
+**Ultimo aggiornamento:** 2026-04-08
 
 ## Progetto
 
@@ -21,7 +21,8 @@
 | Pagine app | `app/(dm)/` — home, auth, campaigns, characters, dice-roller, wiki (`wiki/*` static + `[name]` / `[category]`) |
 | Layout DM | `app/(dm)/layout.tsx` — skip link, `#main-content`, `appCanvas` |
 | Nav / tema | `components/navigation.tsx`, `components/theme-switcher.tsx` |
-| UI primitives | `components/ui/button.tsx`, `card.tsx`, `input.tsx`, … |
+| UI primitives (registry SoliDS) | `components/ui/` — `button` (cva + `@radix-ui/react-slot`), `card`, `input`, `textarea`, `tabs` (`@radix-ui/react-tabs`), `avatar` (`@radix-ui/react-avatar`) — stesse convenzioni del registry GitHub `soli92/solids` |
+| Select nativo / form | `lib/solids-native-classes.ts` — `solidsNativeSelectTrigger`; `appSelectField` in `lib/ui-classes.ts` lo riusa |
 | Classi layout copy | `lib/ui-classes.ts` — `appPageShell`, `appPanelStack`, `appMuted`, … |
 | Util class names | `lib/utils.ts` — `cn` (clsx + tailwind-merge) |
 | Errori auth IT | `lib/auth-errors.ts` — `formatAuthError()` usato in login/register |
@@ -32,7 +33,7 @@
 ## Test (Vitest)
 
 - `npm test` / `npm run test:watch`
-- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/client.test.ts`, `tests/useCampaigns.test.tsx`
+- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/solids-ui.test.ts`, `tests/client.test.ts`, `tests/useCampaigns.test.tsx`
 - Setup: `vitest.config.ts` → `vitest.setup.ts`; `@testing-library/react` dove serve
 
 ## Variabili d’ambiente
@@ -49,7 +50,7 @@ Vedi **`.env.example`**. In sintesi:
 
 ## Note storiche (build)
 
-Problemi già risolti in passato: versioni npm mancanti per `@radix-ui/react-slot` (rimosso), `react-leaflet@^4.2.3` (usare ^4.2.1), `@apply font-body` assente in Tailwind, `swcMinify` deprecato in `next.config`.
+Problemi già risolti in passato: `react-leaflet@^4.2.3` (usare ^4.2.1), `@apply font-body` assente in Tailwind, `swcMinify` deprecato in `next.config`. Il **Button** SoliDS usa di nuovo `@radix-ui/react-slot` (pattern shadcn/registry).
 
 ## Link
 
@@ -60,6 +61,7 @@ Problemi già risolti in passato: versioni npm mancanti per `@radix-ui/react-slo
 
 ## Regole per l’agente
 
+- **SoliDS:** il pacchetto npm espone CSS + preset; i componenti React seguono il **registry** solids (non importare `@soli92/solids` come componenti). Niente colori Tailwind grezzi (`gray-*`, `blue-*`) su form: solo token (`border-input`, `primary`, …).
 - Non aggiungere librerie UI pesanti duplicate rispetto al pattern SoliDS + componenti locali.
 - Messaggi utente e copy auth: **italiano**; errori Supabase mappati con `formatAuthError` dove appropriato.
 - Coerenza **CORS**: configurazione sul backend; il FE non “sistema” CORS da solo.

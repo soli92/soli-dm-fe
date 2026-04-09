@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { solidsNativeSelectTrigger } from "@/lib/solids-native-classes";
 
 const THEMES = [
   { id: "fantasy", label: "Fantasy" },
@@ -55,10 +56,7 @@ export function ThemeSwitcher({
         <select
           value={current}
           onChange={(e) => setTheme(e.target.value)}
-          className={cn(
-            "min-h-10 w-full rounded-xl border-2 border-border/80 bg-background px-3 py-2 text-sm text-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
-          )}
+          className={cn(solidsNativeSelectTrigger, "min-h-10 w-full")}
           aria-label="Seleziona tema colore"
         >
           {THEMES.map((t) => (
@@ -83,8 +81,8 @@ export function ThemeSwitcher({
         value={current}
         onChange={(e) => setTheme(e.target.value)}
         className={cn(
-          "min-h-11 w-[min(100%,9rem)] rounded-full border-2 border-border/80 bg-background px-3 py-2 text-sm text-foreground sm:min-h-10",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          solidsNativeSelectTrigger,
+          "min-h-9 w-[min(100%,9rem)] sm:min-h-9"
         )}
         aria-label="Seleziona tema colore"
       >
