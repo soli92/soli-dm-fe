@@ -30,5 +30,8 @@ export async function createCharacter(
     method: "POST",
     body: JSON.stringify(data),
   });
+  if (!res.data) {
+    throw new Error("Risposta API senza dati del personaggio creato.");
+  }
   return res.data;
 }

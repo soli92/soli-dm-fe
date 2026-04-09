@@ -56,6 +56,14 @@ function CharactersContent() {
     })();
   }, []);
 
+  /** Una sola campagna: preseleziona per evitare submit disabilitato senza motivo chiaro. */
+  useEffect(() => {
+    if (campaigns.length !== 1) return;
+    const only = campaigns[0]?.id;
+    if (!only) return;
+    setCampaignId((prev) => (prev ? prev : only));
+  }, [campaigns]);
+
   useEffect(() => {
     void (async () => {
       setLoading(true);
@@ -120,25 +128,45 @@ function CharactersContent() {
         </div>
 
         <section className={appPanelStack}>
-          <h2 className={appTitle}>Filtra per campagna</h2>
-          <select
-            value={campaignId}
-            onChange={(e) => setCampaignId(e.target.value)}
-            className={appSelectField}
-            aria-label="Filtra personaggi per campagna"
-          >
-            <option value="">Tutte le campagne</option>
-            {campaigns.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </section>
-
-        <section className={appPanelStack}>
           <h2 className={appTitle}>Nuovo personaggio</h2>
+          <p className={`${appMuted} text-sm`}>
+            Ogni personaggio è legato a una campagna. Scegli la campagna qui sotto
+            (obbligatoria per creare); la lista in fondo usa la stessa selezione.
+          </p>
+          {campaigns.length === 0 ? (
+            <p className="rounded-lg border border-border/80 bg-muted/40 px-4 py-3 text-sm text-foreground">
+              Non hai ancora campagne.{" "}
+              <Link
+                href="/campaigns"
+                className="font-semibold text-primary underline-offset-4 hover:underline"
+              >
+                Crea una campagna
+              </Link>{" "}
+              e torna qui per aggiungere personaggi.
+            </p>
+          ) : null}
           <form onSubmit={handleCreate} className="flex flex-col gap-4">
+            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+              Campagna <span className="text-destructive">*</span>
+              <select
+                value={campaignId}
+                onChange={(e) => setCampaignId(e.target.value)}
+                className={appSelectField}
+                aria-label="Campagna a cui associare il personaggio"
+                aria-required
+              >
+                <option value="">— Seleziona una campagna —</option>
+                {campaigns.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              <span className="text-xs font-normal text-muted-foreground">
+                Con «Tutte» (nessuna scelta) puoi solo sfogliare l’elenco; per creare
+                serve una campagna.
+              </span>
+            </label>
             <Input
               label="Nome personaggio"
               value={form.character_name}
@@ -225,11 +253,22 @@ function CharactersContent() {
             <Button type="submit" disabled={saving || !campaignId}>
               {saving ? "Salvataggio…" : "Crea personaggio"}
             </Button>
+            {!campaignId && campaigns.length > 0 ? (
+              <p className="text-sm text-muted-foreground" role="status">
+                Seleziona una campagna per abilitare la creazione.
+              </p>
+            ) : null}
           </form>
         </section>
 
         <section>
-          <h2 className={`${appTitle} mb-4`}>Lista</h2>
+          <h2 className={`${appTitle} mb-4`}>
+            {campaignId
+              ? `Personaggi — ${
+                  campaigns.find((c) => c.id === campaignId)?.name ?? "campagna"
+                }`
+              : "Personaggi — tutte le campagne"}
+          </h2>
           {loading ? (
             <p className={appMuted}>Caricamento…</p>
           ) : list.length === 0 ? (
