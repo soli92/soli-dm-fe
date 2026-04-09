@@ -5,9 +5,9 @@
 
 import { cn } from "@/lib/utils";
 
-/** Superficie principale delle pagine (sfondo sotto le card). */
+/** Superficie principale delle pagine (sfondo sotto le card). Mobile: sotto header compatto; desktop: altezza viewport con sidebar. */
 export const appCanvas =
-  "min-h-[calc(100dvh-3.5rem)] bg-muted/25 text-foreground motion-safe:transition-colors sm:min-h-[calc(100dvh-4rem)]";
+  "min-h-[calc(100dvh-3.5rem)] bg-muted/25 text-foreground motion-safe:transition-colors md:min-h-dvh";
 
 /** Contenitore centrato con padding orizzontale coerente. */
 export const appPageShell = "mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10";

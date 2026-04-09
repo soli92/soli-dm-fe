@@ -8,14 +8,22 @@ export type AuthUser = {
   id: string;
   email: string | undefined;
   name?: string;
+  /** URL foto profilo (es. Google OAuth: `avatar_url` / `picture`). */
+  avatarUrl?: string;
 };
 
 function mapUser(u: User | null): AuthUser | null {
   if (!u) return null;
+  const meta = u.user_metadata as Record<string, unknown> | undefined;
+  const avatarUrl =
+    (typeof meta?.avatar_url === "string" && meta.avatar_url) ||
+    (typeof meta?.picture === "string" && meta.picture) ||
+    undefined;
   return {
     id: u.id,
     email: u.email,
     name: u.user_metadata?.name as string | undefined,
+    avatarUrl,
   };
 }
 

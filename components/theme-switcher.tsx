@@ -12,7 +12,16 @@ const THEMES = [
   { id: "90s-party", label: "90s" },
 ] as const;
 
-export function ThemeSwitcher() {
+export type ThemeSwitcherProps = {
+  /** `stacked`: colonna piena (sidebar); `inline`: riga compatta (toolbar). */
+  layout?: "inline" | "stacked";
+  className?: string;
+};
+
+export function ThemeSwitcher({
+  layout = "inline",
+  className,
+}: ThemeSwitcherProps) {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -23,7 +32,13 @@ export function ThemeSwitcher() {
   if (!mounted) {
     return (
       <span
-        className="inline-block h-11 min-w-[8.5rem] rounded-full border border-border/80 bg-muted/40 sm:h-10"
+        className={cn(
+          "inline-block rounded-full border border-border/80 bg-muted/40",
+          layout === "stacked"
+            ? "h-10 w-full"
+            : "h-11 min-w-[8.5rem] sm:h-10",
+          className
+        )}
         aria-hidden
       />
     );
@@ -31,8 +46,38 @@ export function ThemeSwitcher() {
 
   const current = theme ?? resolvedTheme ?? "fantasy";
 
+  if (layout === "stacked") {
+    return (
+      <div className={cn("flex w-full flex-col gap-1.5", className)}>
+        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Tema
+        </span>
+        <select
+          value={current}
+          onChange={(e) => setTheme(e.target.value)}
+          className={cn(
+            "min-h-10 w-full rounded-xl border-2 border-border/80 bg-background px-3 py-2 text-sm text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          )}
+          aria-label="Seleziona tema colore"
+        >
+          {THEMES.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+
   return (
-    <label className="flex min-h-11 items-center gap-2 text-muted-foreground sm:min-h-10">
+    <label
+      className={cn(
+        "flex min-h-11 items-center gap-2 text-muted-foreground sm:min-h-10",
+        className
+      )}
+    >
       <span className="hidden text-sm sm:inline">Tema</span>
       <select
         value={current}
