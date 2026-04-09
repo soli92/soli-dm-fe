@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCampaigns } from "@/hooks/useCampaigns";
 import type { CreateCampaignInput } from "@/lib/types";
+import { CAMPAIGN_LEVEL_RANGE_PRESETS } from "@/lib/tipologiche";
 import {
   appListItem,
   appMuted,
@@ -13,6 +14,7 @@ import {
   appPageTitle,
   appPanelStack,
   appSectionLabel,
+  appSelectField,
   appTitle,
 } from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
@@ -103,13 +105,23 @@ export default function CampaignsPage() {
                 setForm((f) => ({ ...f, world_setting: e.target.value }))
               }
             />
-            <Input
-              label="Range livelli (es. 1-5)"
-              value={form.level_range}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, level_range: e.target.value }))
-              }
-            />
+            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+              Range livelli
+              <select
+                className={appSelectField}
+                value={form.level_range ?? "1-5"}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, level_range: e.target.value }))
+                }
+                aria-label="Range livelli della campagna"
+              >
+                {CAMPAIGN_LEVEL_RANGE_PRESETS.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            </label>
             <Button type="submit" disabled={saving}>
               {saving ? "Salvataggio…" : "Crea campagna"}
             </Button>

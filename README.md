@@ -41,6 +41,9 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
 - **20+ Divinità** (Forgotten Realms)
 - **Core Rules**: Ability Scores, Combat, Saving Throws, Resting, Multiclassing
 
+### 📑 Tipologiche (`lib/tipologiche/`)
+Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **allineamenti** PHB (9), **classi SRD** e **razze playbook** (12+12), **stati** campagna/personaggio, **preset** range livelli e notazioni dadi, **id categorie** regole wiki. Gli elenchi che esistono anche sul backend (`soli-dm-be` → `src/lib/tipologiche.ts`) vanno aggiornati **in parallelo** (vedi commenti nei file sorgente).
+
 ### 🎨 UI e tema (SoliDS)
 - **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk)
 - Layout ispirato a **Material Design 3** (shell pagina, pannelli, tipografia) tramite classi condivise in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, …) e primitive in `components/ui/`
@@ -158,11 +161,12 @@ components/
 lib/
 ├── api.ts, supabase.ts, auth.ts
 ├── auth-errors.ts                            # messaggi IT per errori Auth
+├── tipologiche/                              # liste D&D / app / dadi / wiki (re-export index.ts)
 ├── ui-classes.ts                             # classi layout / tipografia condivise
 └── utils.ts                                  # cn (clsx + tailwind-merge)
 
 tests/                                        # Vitest (+ Testing Library dove serve)
-├── auth-errors.test.ts, utils.test.ts
+├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts
 ├── client.test.ts, useCampaigns.test.tsx
 ```
 
@@ -218,7 +222,7 @@ npm start
 
 ### Test
 
-- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, hook campagne, `formatAuthError`, `cn`, …).
+- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, hook campagne, tipologiche, `formatAuthError`, `cn`, …).
 - In **CI** (`.github/workflows/ci.yml`): `npm ci` poi `lint` → `type-check` → `test` → `build`.
 
 ### Componenti UI

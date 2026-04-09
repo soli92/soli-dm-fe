@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { isWikiRuleCategoryId } from "@/lib/tipologiche";
 import { appMuted, appSectionLabel } from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
 
@@ -286,43 +287,45 @@ export function RuleCategoryContent({
     typeof data.description === "string" ? data.description : null;
 
   let specific: ReactNode = null;
-  switch (categoryId) {
-    case "ability_scores":
-      specific = <AbilityScoresSection data={data} />;
-      break;
-    case "combat":
-      specific = (
-        <MechanicList
-          items={data.key_mechanics}
-          heading="Meccaniche"
-          sectionId="rule-combat-mechanics"
-        />
-      );
-      break;
-    case "saving_throws":
-      specific = (
-        <MechanicList
-          items={data.mechanics}
-          heading="Tiri salvezza"
-          sectionId="rule-saving-mechanics"
-        />
-      );
-      break;
-    case "skill_checks":
-      specific = (
-        <div className="space-y-8">
-          <SkillChecksDcTable data={data} />
-        </div>
-      );
-      break;
-    case "resting":
-      specific = <RestingSection data={data} />;
-      break;
-    case "multiclassing":
-      specific = <MulticlassSection data={data} />;
-      break;
-    default:
-      specific = <FallbackStructured data={data} />;
+  if (isWikiRuleCategoryId(categoryId)) {
+    switch (categoryId) {
+      case "ability_scores":
+        specific = <AbilityScoresSection data={data} />;
+        break;
+      case "combat":
+        specific = (
+          <MechanicList
+            items={data.key_mechanics}
+            heading="Meccaniche"
+            sectionId="rule-combat-mechanics"
+          />
+        );
+        break;
+      case "saving_throws":
+        specific = (
+          <MechanicList
+            items={data.mechanics}
+            heading="Tiri salvezza"
+            sectionId="rule-saving-mechanics"
+          />
+        );
+        break;
+      case "skill_checks":
+        specific = (
+          <div className="space-y-8">
+            <SkillChecksDcTable data={data} />
+          </div>
+        );
+        break;
+      case "resting":
+        specific = <RestingSection data={data} />;
+        break;
+      case "multiclassing":
+        specific = <MulticlassSection data={data} />;
+        break;
+    }
+  } else {
+    specific = <FallbackStructured data={data} />;
   }
 
   return (

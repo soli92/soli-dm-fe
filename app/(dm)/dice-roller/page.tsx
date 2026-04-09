@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCampaigns, rollDice, getDiceHistory } from "@/lib/api";
 import type { Campaign, DiceRollRow } from "@/lib/types";
+import { DICE_NOTATION_PRESETS } from "@/lib/tipologiche";
 import {
   appMuted,
   appPageShell,
@@ -76,6 +77,21 @@ export default function DiceRollerPage() {
             <code className="font-mono text-primary">NdX</code>, senza modificatori tipo +5.
           </p>
         </header>
+
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Notazioni rapide">
+          {DICE_NOTATION_PRESETS.map((p) => (
+            <Button
+              key={p.notation}
+              type="button"
+              variant="outline"
+              size="sm"
+              className="font-mono"
+              onClick={() => setNotation(p.notation)}
+            >
+              {p.label}
+            </Button>
+          ))}
+        </div>
 
         <form onSubmit={handleRoll} className={appPanelStack}>
           <div className="flex flex-col gap-2">

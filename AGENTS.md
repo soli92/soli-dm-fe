@@ -1,6 +1,6 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-08
+**Ultimo aggiornamento:** 2026-04-09
 
 ## Progetto
 
@@ -26,12 +26,13 @@
 | Util class names | `lib/utils.ts` — `cn` (clsx + tailwind-merge) |
 | Errori auth IT | `lib/auth-errors.ts` — `formatAuthError()` usato in login/register |
 | Client API | `lib/api.ts` — header opzionale `NEXT_PUBLIC_SOLI_DM_API_KEY` se il backend ha `SOLI_DM_API_KEY` |
+| Tipologiche dominio | `lib/tipologiche/` — allineamenti D&D, classi/razze SRD per form, range livelli campagna, preset dadi, id categorie regole wiki (`index.ts` re-export) |
 | PWA / Workbox | `next.config.ts` — `dynamicStartUrl: false` (evita `_async_to_generator` nel SW); runtime cache cross-origin con matcher che **esclude** le basi API (stringhe inlined nel SW) |
 
 ## Test (Vitest)
 
 - `npm test` / `npm run test:watch`
-- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/client.test.ts`, `tests/useCampaigns.test.tsx`
+- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/client.test.ts`, `tests/useCampaigns.test.tsx`
 - Setup: `vitest.config.ts` → `vitest.setup.ts`; `@testing-library/react` dove serve
 
 ## Variabili d’ambiente

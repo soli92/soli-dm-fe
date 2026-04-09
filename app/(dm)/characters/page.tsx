@@ -8,6 +8,11 @@ import { Input } from "@/components/ui/input";
 import { getCampaigns, getCharacters, createCharacter } from "@/lib/api";
 import type { Campaign, Character } from "@/lib/types";
 import {
+  DND_ALIGNMENTS,
+  PLAYBOOK_RACE_NAMES,
+  SRD_CLASS_NAMES,
+} from "@/lib/tipologiche";
+import {
   appMuted,
   appPageShell,
   appPageTitle,
@@ -28,10 +33,11 @@ function CharactersContent() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     character_name: "",
-    class_name: "Fighter",
-    race: "Human",
+    class_name: "Fighter" as (typeof SRD_CLASS_NAMES)[number],
+    race: "Human" as (typeof PLAYBOOK_RACE_NAMES)[number],
     player_name: "",
     level: "1",
+    alignment: "Neutral" as (typeof DND_ALIGNMENTS)[number],
   });
 
   useEffect(() => {
@@ -79,10 +85,11 @@ function CharactersContent() {
       await createCharacter({
         campaign_id: campaignId,
         character_name: form.character_name.trim(),
-        class_name: form.class_name.trim(),
-        race: form.race.trim(),
+        class_name: form.class_name,
+        race: form.race,
         player_name: form.player_name.trim() || null,
         level: parseInt(form.level, 10) || 1,
+        alignment: form.alignment,
       });
       toast.success("Personaggio creato.");
       setForm((f) => ({
@@ -147,18 +154,66 @@ function CharactersContent() {
                 setForm((f) => ({ ...f, player_name: e.target.value }))
               }
             />
-            <Input
-              label="Classe"
-              value={form.class_name}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, class_name: e.target.value }))
-              }
-            />
-            <Input
-              label="Razza"
-              value={form.race}
-              onChange={(e) => setForm((f) => ({ ...f, race: e.target.value }))}
-            />
+            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+              Classe
+              <select
+                className={appSelectField}
+                value={form.class_name}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    class_name: e.target.value as (typeof SRD_CLASS_NAMES)[number],
+                  }))
+                }
+                aria-label="Classe del personaggio"
+              >
+                {SRD_CLASS_NAMES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+              Razza
+              <select
+                className={appSelectField}
+                value={form.race}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    race: e.target.value as (typeof PLAYBOOK_RACE_NAMES)[number],
+                  }))
+                }
+                aria-label="Razza del personaggio"
+              >
+                {PLAYBOOK_RACE_NAMES.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+              Allineamento
+              <select
+                className={appSelectField}
+                value={form.alignment}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    alignment: e.target.value as (typeof DND_ALIGNMENTS)[number],
+                  }))
+                }
+                aria-label="Allineamento"
+              >
+                {DND_ALIGNMENTS.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </label>
             <Input
               label="Livello"
               type="number"
