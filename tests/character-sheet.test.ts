@@ -6,6 +6,8 @@ import {
   normalizeSheetData,
   newSessionEntry,
   CHARACTER_ABILITY_KEYS,
+  abilityModifierFromScore,
+  formatAbilityModifier,
 } from "@/lib/character-sheet";
 
 describe("character-sheet", () => {
@@ -56,5 +58,27 @@ describe("character-sheet", () => {
     expect(s.id.length).toBeGreaterThan(0);
     expect(s.title).toBe("");
     expect(s.notes).toBe("");
+  });
+
+  it("abilityModifierFromScore segue regola 5e", () => {
+    expect(abilityModifierFromScore(10)).toBe(0);
+    expect(abilityModifierFromScore(12)).toBe(1);
+    expect(abilityModifierFromScore(8)).toBe(-1);
+    expect(abilityModifierFromScore(20)).toBe(5);
+  });
+
+  it("formatAbilityModifier mostra segno +", () => {
+    expect(formatAbilityModifier(0)).toBe("+0");
+    expect(formatAbilityModifier(3)).toBe("+3");
+    expect(formatAbilityModifier(-2)).toBe("-2");
+  });
+
+  it("normalizeSheetData legge multiclasse", () => {
+    const n = normalizeSheetData({
+      multiclass_class: "Rogue",
+      multiclass_level: "2",
+    });
+    expect(n.multiclass_class).toBe("Rogue");
+    expect(n.multiclass_level).toBe("2");
   });
 });

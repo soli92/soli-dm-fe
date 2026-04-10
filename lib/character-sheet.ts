@@ -31,11 +31,23 @@ export const CHARACTER_ABILITY_LABELS_IT: Record<CharacterAbilityKey, string> =
 export function emptySheetData(): CharacterSheetData {
   return {
     subclass: "",
+    multiclass_class: "",
+    multiclass_level: "",
     bonuses_penalties: "",
     armaments: "",
     deposit: "",
     sessions: [],
   };
+}
+
+/** Modificatore D&D 5e da punteggio finale (1–30). */
+export function abilityModifierFromScore(score: number): number {
+  const s = Math.min(30, Math.max(1, Math.round(score)));
+  return Math.floor((s - 10) / 2);
+}
+
+export function formatAbilityModifier(mod: number): string {
+  return mod >= 0 ? `+${mod}` : String(mod);
 }
 
 function normalizeSession(raw: unknown): CharacterGameSession | null {
@@ -55,6 +67,10 @@ export function normalizeSheetData(raw: unknown): CharacterSheetData {
   if (raw == null || typeof raw !== "object" || Array.isArray(raw)) return base;
   const o = raw as Record<string, unknown>;
   if (typeof o.subclass === "string") base.subclass = o.subclass;
+  if (typeof o.multiclass_class === "string")
+    base.multiclass_class = o.multiclass_class;
+  if (typeof o.multiclass_level === "string")
+    base.multiclass_level = o.multiclass_level;
   if (typeof o.bonuses_penalties === "string")
     base.bonuses_penalties = o.bonuses_penalties;
   if (typeof o.armaments === "string") base.armaments = o.armaments;

@@ -1,6 +1,6 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-08
+**Ultimo aggiornamento:** 2026-04-10
 
 ## Progetto
 
@@ -18,12 +18,15 @@
 
 | Area | Path |
 |------|------|
-| Pagine app | `app/(dm)/` — home, auth, campaigns, characters, dice-roller, wiki (`wiki/*` static + `[name]` / `[category]`) |
-| Layout DM | `app/(dm)/layout.tsx` — skip link, `#main-content`, `appCanvas` |
+| Pagine app | `app/(dm)/` — home, auth, campaigns, `characters` (+ `[id]` dettaglio), dice-roller, wiki (`wiki/*` static + `[name]` / `[category]`) |
+| Layout DM | `app/(dm)/layout.tsx` — skip link, `#main-content`, `appCanvas` (gradiente leggero) |
 | Nav / tema | `components/navigation.tsx`, `components/theme-switcher.tsx` |
-| UI primitives (registry SoliDS) | `components/ui/` — `button` (cva + `@radix-ui/react-slot`), `card`, `input`, `textarea`, `tabs` (`@radix-ui/react-tabs`), `avatar` (`@radix-ui/react-avatar`) — stesse convenzioni del registry GitHub `soli92/solids` |
+| Scheda personaggio | `components/character/CharacterIdentityPanel.tsx` (identità + multiclasse), `CharacterTabsFields.tsx` (tab stats con modificatori, armamenti, storia, …) |
+| UI primitives (registry SoliDS) | `components/ui/` — `button` (cva + `@radix-ui/react-slot`), `card`, `input`, `textarea`, `tabs` (`@radix-ui/react-tabs`), `avatar` (`@radix-ui/react-avatar`), `full-screen-loader` (overlay `z-[100]` su lista/dettaglio personaggi) |
 | Select nativo / form | `lib/solids-native-classes.ts` — `solidsNativeSelectTrigger`; `appSelectField` in `lib/ui-classes.ts` lo riusa |
-| Classi layout copy | `lib/ui-classes.ts` — `appPageShell`, `appPanelStack`, `appMuted`, … |
+| Classi layout copy | `lib/ui-classes.ts` — `appPageShell`, `appPanelStack` (card/95 + blur), `appCanvas` (gradiente), `appMuted`, … |
+| Scheda / numeri D&D | `lib/character-sheet.ts` — `stats`/`sheet_data`, `abilityModifierFromScore`, normalizzazione |
+| Riferimento razza/classe (testo + bonus fissi SRD) | `lib/racial-class-reference.ts` — usato dalla UI statistiche |
 | Util class names | `lib/utils.ts` — `cn` (clsx + tailwind-merge) |
 | Errori auth IT | `lib/auth-errors.ts` — `formatAuthError()` usato in login/register |
 | Client API | `lib/api.ts` — header opzionale `NEXT_PUBLIC_SOLI_DM_API_KEY` se il backend ha `SOLI_DM_API_KEY` |
@@ -33,7 +36,7 @@
 ## Test (Vitest)
 
 - `npm test` / `npm run test:watch`
-- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/solids-ui.test.ts`, `tests/client.test.ts`, `tests/character-sheet.test.ts`, `tests/characters-api.test.ts`, `tests/useCampaigns.test.tsx`
+- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/solids-ui.test.ts`, `tests/client.test.ts`, `tests/character-sheet.test.ts`, `tests/characters-api.test.ts`, `tests/racial-class-reference.test.ts`, `tests/useCampaigns.test.tsx`
 - Setup: `vitest.config.ts` → `vitest.setup.ts`; `@testing-library/react` dove serve
 
 ## Variabili d’ambiente

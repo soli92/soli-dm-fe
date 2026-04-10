@@ -24,9 +24,11 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
   - Salvataggio automatico
 
 ### 👤 Gestione Personaggi
-- Crea personaggi per campagna con **scheda a tab**: Statistiche (caratteristiche), Classe (classe/razza/livello/allineamento, sottoclasse, bonus e malus), Armamenti, Deposito, Storia (background + **sessioni di gioco** con titolo/data/note)
-- Dati estesi persistiti in Supabase nella colonna JSON **`sheet_data`** (e `background` per il testo libero storia); sul database va eseguito lo script in **`soli-dm-be/scripts/supabase-alignment.sql`** (o l’`ALTER` equivalente in `SETUP.md`)
-- Lista personaggi con link alla **scheda dettaglio** (`/characters/[id]`) e salvataggio via **`PUT /api/characters/:id`**
+- **Pannello identità** (sempre visibile sopra le tab): classe principale, razza, sottoclasse/archetipo, allineamento, livello; **multiclasse opzionale** (seconda classe + livelli, salvati in `sheet_data.multiclass_class` / `multiclass_level`)
+- **Tab scheda**: *Statistiche* (punteggi con **modificatori D&D 5e** e riquadri di riferimento bonus razza SRD / tiri salvezza classe da `lib/racial-class-reference.ts`), *Bonus e talenti* (note libere), *Armamenti*, *Deposito*, *Storia* (background + **sessioni di gioco** con titolo/data/note)
+- Dati estesi in Supabase: JSON **`sheet_data`** + colonna **`background`**; migrazione DB: **`soli-dm-be/scripts/supabase-alignment.sql`** (o `SETUP.md`)
+- Lista personaggi → **`/characters/[id]`** con **`PUT /api/characters/:id`**
+- **Loader a tutto schermo** (`components/ui/full-screen-loader.tsx`) durante il caricamento campagne/elenco sulla lista personaggi e durante il fetch della scheda in dettaglio (`aria-hidden` sul contenuto sottostante)
 
 ### 🎲 Simulatore Dadi
 - Lancia dadi in notazione **`NdX`** (es. `4d6`, `2d20`) — senza modificatori (`+5` non è accettato dall’API)
@@ -44,7 +46,9 @@ Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **all
 
 ### 🎨 UI e tema (SoliDS)
 - **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk)
-- **Componenti UI** in `components/ui/`: allineati al **registry React** del design system ([repo solids](https://github.com/soli92/solids) → `registry/solids/*`) — `Button` (class-variance-authority + Radix Slot), `Card` (compound), `Input` / `Textarea`, `Tabs` (Radix), `Avatar` (Radix). Il pacchetto npm **non** esporta questi file: restano copia curata in app.
+- **Layout** (`lib/ui-classes.ts`): area DM con **gradiente leggero** su `appCanvas`; pannelli `appPanelStack` con vetro (`bg-card/95`, blur sottile)
+- **Componenti UI** in `components/ui/`: allineati al **registry React** del design system ([repo solids](https://github.com/soli92/solids) → `registry/solids/*`) — `Button` (class-variance-authority + Radix Slot), `Card` (compound), `Input` / `Textarea`, `Tabs` (Radix), `Avatar` (Radix), **`full-screen-loader`** (overlay caricamento). Il pacchetto npm **non** esporta questi file: restano copia curata in app.
+- **Scheda personaggio**: `components/character/CharacterIdentityPanel.tsx`, `CharacterTabsFields.tsx`; helper **`lib/character-sheet.ts`** (normalizzazione `stats`/`sheet_data`, modificatori)
 - **`<select>` nativi** (form, theme switcher): classi condivise `solidsNativeSelectTrigger` in `lib/solids-native-classes.ts` e `appSelectField` in `lib/ui-classes.ts` (stesso linguaggio visivo del `SelectTrigger` del registry).
 - Layout shell: classi in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, …) e **sidebar** di navigazione (`components/navigation.tsx`)
 - **next-themes** — selezione tema nel **pannello laterale** (desktop) o nel drawer (mobile)
@@ -156,11 +160,14 @@ app/
 
 components/
 ├── navigation.tsx, theme-switcher.tsx, UserAvatar.tsx
-└── ui/                                       # button, card, input, textarea, tabs, avatar (SoliDS registry)
+├── character/                                # CharacterIdentityPanel, CharacterTabsFields
+└── ui/                                       # button, card, input, textarea, tabs, avatar, full-screen-loader (SoliDS + loader)
 
 lib/
 ├── api.ts, supabase.ts, auth.ts
 ├── auth-errors.ts                            # messaggi IT per errori Auth
+├── character-sheet.ts                        # stats/sheet_data, modificatori 5e
+├── racial-class-reference.ts                 # hint bonus razza / classe (riferimento SRD semplificato)
 ├── solids-native-classes.ts                  # stile `<select>` allineato a SoliDS SelectTrigger
 ├── tipologiche/                              # liste D&D / app / dadi / wiki (re-export index.ts)
 ├── ui-classes.ts                             # classi layout / tipografia condivise
@@ -168,7 +175,7 @@ lib/
 
 tests/                                        # Vitest (+ Testing Library dove serve)
 ├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts, solids-ui.test.ts
-├── client.test.ts, character-sheet.test.ts, characters-api.test.ts, useCampaigns.test.tsx
+├── client.test.ts, character-sheet.test.ts, characters-api.test.ts, racial-class-reference.test.ts, useCampaigns.test.tsx
 ```
 
 ---
@@ -227,7 +234,7 @@ npm start
 
 ### Test
 
-- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, `updateCharacter`, helper scheda `lib/character-sheet`, hook campagne, tipologiche, primitive UI SoliDS, `formatAuthError`, `cn`, …).
+- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, `updateCharacter`, `lib/character-sheet`, `lib/racial-class-reference`, hook campagne, tipologiche, primitive UI SoliDS, `formatAuthError`, `cn`, …).
 - In **CI** (`.github/workflows/ci.yml`): `npm ci` poi `lint` → `type-check` → `test` → `build`.
 
 ### Componenti UI

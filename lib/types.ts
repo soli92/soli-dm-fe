@@ -45,6 +45,10 @@ export type CharacterGameSession = {
 /** Dati scheda oltre alle statistiche base (colonna JSON `sheet_data` sul backend). */
 export type CharacterSheetData = {
   subclass?: string | null;
+  /** Seconda classe (multiclasse); vuoto se assente. */
+  multiclass_class?: string | null;
+  /** Livelli nella seconda classe (testo o numero come stringa). */
+  multiclass_level?: string | null;
   bonuses_penalties?: string;
   armaments?: string;
   deposit?: string;

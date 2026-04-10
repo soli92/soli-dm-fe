@@ -8,7 +8,7 @@ import { solidsNativeSelectTrigger } from "@/lib/solids-native-classes";
 
 /** Superficie principale delle pagine (sfondo sotto le card). Mobile: sotto header compatto; desktop: altezza viewport con sidebar. */
 export const appCanvas =
-  "min-h-[calc(100dvh-3.5rem)] bg-muted/25 text-foreground motion-safe:transition-colors md:min-h-dvh";
+  "min-h-[calc(100dvh-3.5rem)] bg-gradient-to-b from-muted/50 via-muted/30 to-background text-foreground motion-safe:transition-colors md:min-h-dvh";
 
 /** Contenitore centrato con padding orizzontale coerente. */
 export const appPageShell = "mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10";
@@ -32,7 +32,7 @@ export const appPanel = cn(
 );
 
 export const appPanelStack = cn(
-  "flex flex-col gap-5 rounded-2xl border border-border/80 bg-card p-6 text-card-foreground sm:p-8",
+  "flex flex-col gap-5 rounded-2xl border border-border/80 bg-card/95 p-6 text-card-foreground backdrop-blur-[2px] sm:p-8",
   appElevation1
 );
 

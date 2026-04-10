@@ -7,9 +7,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CHARACTER_ABILITY_KEYS,
   CHARACTER_ABILITY_LABELS_IT,
+  abilityModifierFromScore,
+  formatAbilityModifier,
   newSessionEntry,
   type CharacterAbilityKey,
 } from "@/lib/character-sheet";
+import {
+  getClassReferenceHint,
+  getFixedRacialAbilityBonuses,
+  getRacialBonusHints,
+} from "@/lib/racial-class-reference";
 import type { CharacterGameSession, CharacterSheetData, CharacterStats } from "@/lib/types";
 import { appMuted, appSectionLabel } from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
@@ -19,9 +26,8 @@ export type CharacterTabsFieldsProps = {
   onChangeStat: (key: CharacterAbilityKey, value: number) => void;
   sheet: CharacterSheetData;
   patchSheet: (patch: Partial<CharacterSheetData>) => void;
-  /** Contenuto in cima al tab Classe (classe, razza, livello, allineamento, …). */
-  classTabTop: React.ReactNode;
-  /** Tab Storia: testo libero (colonna `background` sul backend). */
+  race: string;
+  characterClass: string;
   background: string;
   onBackgroundChange: (value: string) => void;
   tabsListClassName?: string;
@@ -32,12 +38,16 @@ export function CharacterTabsFields({
   onChangeStat,
   sheet,
   patchSheet,
-  classTabTop,
+  race,
+  characterClass,
   background,
   onBackgroundChange,
   tabsListClassName,
 }: CharacterTabsFieldsProps) {
   const sessions = sheet.sessions ?? [];
+  const racialNumeric = getFixedRacialAbilityBonuses(race);
+  const racialLines = getRacialBonusHints(race);
+  const classHint = getClassReferenceHint(characterClass);
 
   function setSessions(next: CharacterGameSession[]) {
     patchSheet({ sessions: next });
@@ -57,61 +67,138 @@ export function CharacterTabsFields({
     <Tabs defaultValue="stats" className="w-full">
       <TabsList
         className={cn(
-          "flex h-auto min-h-9 w-full flex-wrap justify-start gap-1 p-1",
+          "flex h-auto min-h-10 w-full flex-wrap justify-start gap-1.5 rounded-xl border border-border/60 bg-muted/40 p-1.5",
           tabsListClassName
         )}
       >
-        <TabsTrigger value="stats">Statistiche</TabsTrigger>
-        <TabsTrigger value="class">Classe</TabsTrigger>
-        <TabsTrigger value="armaments">Armamenti</TabsTrigger>
-        <TabsTrigger value="deposit">Deposito</TabsTrigger>
-        <TabsTrigger value="story">Storia</TabsTrigger>
+        <TabsTrigger value="stats" className="rounded-lg">
+          Statistiche
+        </TabsTrigger>
+        <TabsTrigger value="class" className="rounded-lg">
+          Bonus e talenti
+        </TabsTrigger>
+        <TabsTrigger value="armaments" className="rounded-lg">
+          Armamenti
+        </TabsTrigger>
+        <TabsTrigger value="deposit" className="rounded-lg">
+          Deposito
+        </TabsTrigger>
+        <TabsTrigger value="story" className="rounded-lg">
+          Storia
+        </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="stats" className="space-y-4 pt-2">
-        <p className={`${appMuted} text-sm`}>
-          Punteggi caratteristica (tipicamente 8–20 prima di bonus di razza e
-          livello).
+      <TabsContent value="stats" className="space-y-5 pt-4">
+        <p className={`${appMuted} text-sm leading-relaxed`}>
+          Inserisci i <strong>punteggi finali</strong> in scheda (dopo eventuali bonus di razza).
+          Il <strong>modificatore</strong> è calcolato come in D&amp;D 5e: (punteggio − 10) ÷ 2,
+          arrotondato per difetto.
         </p>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          {CHARACTER_ABILITY_KEYS.map((key) => {
+            const raw = stats[key] ?? 10;
+            const mod = abilityModifierFromScore(raw);
+            const racial = racialNumeric[key];
+            const impliedBase =
+              racial != null && racial > 0 ? raw - racial : null;
+            return (
+              <div
+                key={key}
+                className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card/80 p-4 shadow-sm"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-sm font-semibold text-foreground">
+                    {CHARACTER_ABILITY_LABELS_IT[key]}
+                  </span>
+                  <span
+                    className={cn(
+                      "tabular-nums text-lg font-bold tracking-tight text-primary",
+                      mod < 0 && "text-amber-700 dark:text-amber-400"
+                    )}
+                    title="Modificatore da punteggio inserito"
+                  >
+                    {formatAbilityModifier(mod)}
+                  </span>
+                </div>
+                <Input
+                  aria-label={`Punteggio ${CHARACTER_ABILITY_LABELS_IT[key]}`}
+                  type="number"
+                  min={1}
+                  max={30}
+                  value={String(raw)}
+                  onChange={(e) => {
+                    const n = parseInt(e.target.value, 10);
+                    onChangeStat(key, Number.isFinite(n) ? n : 10);
+                  }}
+                  className="font-mono"
+                />
+                {racial != null && racial > 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    Bonus razza SRD tipico su questa caratteristica:{" "}
+                    <span className="font-medium text-foreground">
+                      +{racial}
+                    </span>
+                    {impliedBase != null && impliedBase >= 1 ? (
+                      <>
+                        {" "}
+                        · se il totale include già questo bonus, punteggio base
+                        sarebbe circa{" "}
+                        <span className="font-mono">{impliedBase}</span>
+                      </>
+                    ) : null}
+                  </p>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
-          {CHARACTER_ABILITY_KEYS.map((key) => (
-            <Input
-              key={key}
-              label={CHARACTER_ABILITY_LABELS_IT[key]}
-              type="number"
-              min={1}
-              max={30}
-              value={String(stats[key] ?? 10)}
-              onChange={(e) => {
-                const n = parseInt(e.target.value, 10);
-                onChangeStat(key, Number.isFinite(n) ? n : 10);
-              }}
-            />
-          ))}
+          <div className="rounded-xl border border-border/60 bg-muted/25 p-4">
+            <p className={appSectionLabel}>Razza — riferimento bonus (SRD)</p>
+            <p className="mt-2 text-sm font-medium text-foreground">{race}</p>
+            {racialLines.length > 0 ? (
+              <ul className={`mt-2 list-inside list-disc space-y-1 ${appMuted} text-sm`}>
+                {racialLines.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className={`mt-2 ${appMuted} text-sm`}>
+                Nessun riepilogo predefinito per questa etichetta; usa i bonus
+                manuali nel tab «Bonus e talenti» se serve.
+              </p>
+            )}
+          </div>
+          <div className="rounded-xl border border-border/60 bg-muted/25 p-4">
+            <p className={appSectionLabel}>Classe — riferimento</p>
+            <p className="mt-2 text-sm font-medium text-foreground">
+              {characterClass}
+            </p>
+            <p className={`mt-2 text-sm leading-relaxed ${appMuted}`}>
+              {classHint} I talenti, ASI e sottoclasse possono aggiungere altri
+              bonus: annotali nel campo testo sotto o in «Bonus e talenti».
+            </p>
+          </div>
         </div>
       </TabsContent>
 
-      <TabsContent value="class" className="space-y-5 pt-2">
-        <div className="space-y-4">{classTabTop}</div>
-        <div>
-          <p className={appSectionLabel}>Sottoclasse</p>
-          <Input
-            label="Sottoclasse / archetipo"
-            value={sheet.subclass ?? ""}
-            onChange={(e) => patchSheet({ subclass: e.target.value })}
-            className="mt-2"
-          />
-        </div>
+      <TabsContent value="class" className="space-y-4 pt-4">
+        <p className={`${appMuted} text-sm`}>
+          Annota qui talenti, bonus di sottoclasse, oggetti magici che
+          modificano le caratteristiche o i tiri, condizioni ricorrenti, ecc.
+        </p>
         <Textarea
-          label="Bonus e malus"
-          placeholder="Bonus di razza, talenti, condizioni, svantaggi…"
+          label="Bonus, malus e note di gioco"
+          placeholder="es. +2 Forza dal cinturone; Vantaggio su Percezione in natura; …"
           value={sheet.bonuses_penalties ?? ""}
           onChange={(e) => patchSheet({ bonuses_penalties: e.target.value })}
-          className="min-h-[120px]"
+          className="min-h-[160px]"
         />
       </TabsContent>
 
-      <TabsContent value="armaments" className="pt-2">
+      <TabsContent value="armaments" className="pt-4">
         <Textarea
           label="Armamenti"
           placeholder="Armi, scudi, munizioni, oggetti combattimento…"
@@ -121,7 +208,7 @@ export function CharacterTabsFields({
         />
       </TabsContent>
 
-      <TabsContent value="deposit" className="pt-2">
+      <TabsContent value="deposit" className="pt-4">
         <Textarea
           label="Deposito / inventario"
           placeholder="Equipaggiamento, tesori, consumabili, zaino…"
@@ -131,7 +218,7 @@ export function CharacterTabsFields({
         />
       </TabsContent>
 
-      <TabsContent value="story" className="space-y-4 pt-2">
+      <TabsContent value="story" className="space-y-4 pt-4">
         <Textarea
           label="Background e appunti generali"
           placeholder="Storia del personaggio, legami, obiettivi…"
