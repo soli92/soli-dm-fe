@@ -241,9 +241,12 @@ export function Navigation() {
           "fixed inset-y-0 left-0 z-50 flex max-w-[calc(100vw-3rem)] flex-col border-r border-border/80 bg-card shadow-xl shadow-black/10 backdrop-blur-md",
           "dark:bg-card/98 dark:shadow-black/40",
           "transition-transform duration-200 ease-out motion-reduce:transition-none",
-          "md:z-40 md:max-w-none md:translate-x-0 md:shadow-none",
-          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-          !mobileOpen && "max-md:invisible max-md:pointer-events-none"
+          /* Desktop (md+): sempre visibile, sopra il canvas ma senza ombra da drawer */
+          "md:z-40 md:max-w-none md:translate-x-0 md:shadow-none md:pointer-events-auto",
+          /* Mobile: drawer; chiuso = fuori schermo (no `invisible`, evita edge su resize/hydration) */
+          mobileOpen
+            ? "max-md:translate-x-0 max-md:pointer-events-auto"
+            : "max-md:-translate-x-full max-md:pointer-events-none"
         )}
         aria-label="Navigazione applicazione"
       >
