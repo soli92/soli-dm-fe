@@ -14,8 +14,8 @@ import {
 import type { Campaign, Character, CharacterSheetData } from "@/lib/types";
 import {
   DND_ALIGNMENTS,
+  PLAYBOOK_CLASS_NAMES,
   PLAYBOOK_RACE_NAMES,
-  SRD_CLASS_NAMES,
 } from "@/lib/tipologiche";
 import {
   appListItem,
@@ -40,7 +40,7 @@ function CharactersContent() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     character_name: "",
-    class_name: "Fighter" as (typeof SRD_CLASS_NAMES)[number],
+    class_name: "Fighter" as (typeof PLAYBOOK_CLASS_NAMES)[number],
     race: "Human" as (typeof PLAYBOOK_RACE_NAMES)[number],
     player_name: "",
     level: "1",
@@ -121,7 +121,7 @@ function CharactersContent() {
       toast.success("Personaggio creato.");
       setForm({
         character_name: "",
-        class_name: "Fighter",
+        class_name: "Fighter" as (typeof PLAYBOOK_CLASS_NAMES)[number],
         race: "Human",
         player_name: "",
         level: "1",
@@ -147,14 +147,14 @@ function CharactersContent() {
           className={appSelectField}
           value={form.class_name}
           onChange={(e) =>
-            setForm((f) => ({
-              ...f,
-              class_name: e.target.value as (typeof SRD_CLASS_NAMES)[number],
-            }))
-          }
-          aria-label="Classe del personaggio"
-        >
-          {SRD_CLASS_NAMES.map((c) => (
+              setForm((f) => ({
+                    ...f,
+                    class_name: e.target.value as (typeof PLAYBOOK_CLASS_NAMES)[number],
+                  }))
+                }
+                aria-label="Classe del personaggio"
+              >
+                {PLAYBOOK_CLASS_NAMES.map((c) => (
             <option key={c} value={c}>
               {c}
             </option>

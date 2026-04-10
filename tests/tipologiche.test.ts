@@ -5,6 +5,7 @@ import {
   CHARACTER_STATUSES,
   DICE_NOTATION_PRESETS,
   DND_ALIGNMENTS,
+  PLAYBOOK_CLASS_NAMES,
   PLAYBOOK_RACE_NAMES,
   SRD_CLASS_NAMES,
   isWikiRuleCategoryId,
@@ -16,9 +17,18 @@ describe("tipologiche", () => {
     expect(DND_ALIGNMENTS).toContain("Neutral");
   });
 
-  it("classi SRD: 12 voci", () => {
+  it("classi SRD: 12 voci (wiki/API)", () => {
     expect(SRD_CLASS_NAMES).toHaveLength(12);
     expect(SRD_CLASS_NAMES).toContain("Fighter");
+  });
+
+  it("classi playbook form: include SRD e Warrior", () => {
+    expect(PLAYBOOK_CLASS_NAMES).toHaveLength(13);
+    expect(PLAYBOOK_CLASS_NAMES).toContain("Warrior");
+    expect(PLAYBOOK_CLASS_NAMES).toContain("Fighter");
+    for (const c of SRD_CLASS_NAMES) {
+      expect(PLAYBOOK_CLASS_NAMES).toContain(c);
+    }
   });
 
   it("razze playbook: 12 voci (SRD + estese)", () => {

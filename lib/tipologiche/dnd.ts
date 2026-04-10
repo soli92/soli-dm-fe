@@ -16,7 +16,7 @@ export const DND_ALIGNMENTS = [
 
 export type DndAlignment = (typeof DND_ALIGNMENTS)[number];
 
-/** Classi SRD (12) — stesso set della wiki/API standard. */
+/** Classi SRD (12) — stesso set della wiki/API standard (dnd5eapi / `wiki_srd_cache`). */
 export const SRD_CLASS_NAMES = [
   "Barbarian",
   "Bard",
@@ -33,6 +33,28 @@ export const SRD_CLASS_NAMES = [
 ] as const;
 
 export type SrdClassName = (typeof SRD_CLASS_NAMES)[number];
+
+/**
+ * Opzioni classe nei form personaggio: tutte le SRD più etichette d’uso comune.
+ * In 5e ufficiale il “guerriero” è **Fighter**; **Warrior** è spesso usato in altri sistemi o come sinonimo in tavola.
+ */
+export const PLAYBOOK_CLASS_NAMES = [
+  "Barbarian",
+  "Bard",
+  "Cleric",
+  "Druid",
+  "Fighter",
+  "Monk",
+  "Paladin",
+  "Ranger",
+  "Rogue",
+  "Sorcerer",
+  "Warlock",
+  "Warrior",
+  "Wizard",
+] as const;
+
+export type PlaybookClassName = (typeof PLAYBOOK_CLASS_NAMES)[number];
 
 /**
  * Razze offerte in creazione guidata (include SRD + estese dal fallback wiki backend).

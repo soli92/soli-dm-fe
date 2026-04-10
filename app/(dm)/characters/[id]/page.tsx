@@ -15,8 +15,8 @@ import {
 } from "@/lib/character-sheet";
 import {
   DND_ALIGNMENTS,
+  PLAYBOOK_CLASS_NAMES,
   PLAYBOOK_RACE_NAMES,
-  SRD_CLASS_NAMES,
 } from "@/lib/tipologiche";
 import type { Character, CharacterSheetData } from "@/lib/types";
 import {
@@ -143,12 +143,12 @@ export default function CharacterDetailPage() {
             }
             aria-label="Classe del personaggio"
           >
-            {!SRD_CLASS_NAMES.includes(
-              draft.class_name as (typeof SRD_CLASS_NAMES)[number]
+            {!PLAYBOOK_CLASS_NAMES.includes(
+              draft.class_name as (typeof PLAYBOOK_CLASS_NAMES)[number]
             ) ? (
               <option value={draft.class_name}>{draft.class_name}</option>
             ) : null}
-            {SRD_CLASS_NAMES.map((c) => (
+            {PLAYBOOK_CLASS_NAMES.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>

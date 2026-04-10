@@ -34,13 +34,13 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
 - Tiri multipli (`/api/dice/roll-multiple`)
 
 ### 📚 Wiki D&D
-- **12 Classi**: Barbarian, Bard, Cleric, Druid, Fighter, Monk, Paladin, Ranger, Rogue, Sorcerer, Warlock, Wizard
+- **Classi wiki (SRD, 12)**: Barbarian … Wizard; nei **form personaggio** è disponibile anche **Warrior** (nome comune fuori dal naming SRD, oltre a **Fighter**)
 - **12 Razze**: Dragonborn, Dwarf, Elf, Gnome, Half-Elf, Half-Orc, Halfling, Human, Tiefling, Asimar, Genasi, Goliath
 - **20+ Divinità** (Forgotten Realms)
 - **Core Rules**: Ability Scores, Combat, Saving Throws, Resting, Multiclassing
 
 ### 📑 Tipologiche (`lib/tipologiche/`)
-Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **allineamenti** PHB (9), **classi SRD** e **razze playbook** (12+12), **stati** campagna/personaggio, **preset** range livelli e notazioni dadi, **id categorie** regole wiki. Gli elenchi che esistono anche sul backend (`soli-dm-be` → `src/lib/tipologiche.ts`) vanno aggiornati **in parallelo** (vedi commenti nei file sorgente).
+Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **allineamenti** PHB (9), **classi SRD** (12, wiki/API) e **`PLAYBOOK_CLASS_NAMES`** per i form personaggio (SRD + **Warrior**), **razze playbook** (12), **stati** campagna/personaggio, **preset** range livelli e notazioni dadi, **id categorie** regole wiki. Gli elenchi che esistono anche sul backend (`soli-dm-be` → `src/lib/tipologiche.ts`) vanno aggiornati **in parallelo** dove serve (vedi commenti nei file sorgente).
 
 ### 🎨 UI e tema (SoliDS)
 - **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk)
