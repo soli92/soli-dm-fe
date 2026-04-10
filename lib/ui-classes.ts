@@ -6,9 +6,9 @@
 import { cn } from "@/lib/utils";
 import { solidsNativeSelectTrigger } from "@/lib/solids-native-classes";
 
-/** Superficie principale delle pagine (sfondo sotto le card). Mobile: sotto header compatto; desktop: altezza viewport con sidebar. */
+/** Superficie principale: sotto app bar fissa (h-14) su tutti i breakpoint; menu laterale è drawer, non occupa larghezza. */
 export const appCanvas =
-  "min-h-[calc(100dvh-3.5rem)] bg-gradient-to-b from-muted/50 via-muted/30 to-background text-foreground motion-safe:transition-colors md:min-h-dvh";
+  "min-h-[calc(100dvh-3.5rem)] bg-gradient-to-b from-muted/50 via-muted/30 to-background text-foreground motion-safe:transition-colors";
 
 /** Contenitore centrato: respiro maggiore su tablet, max-width su desktop largo. */
 export const appPageShell =

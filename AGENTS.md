@@ -1,6 +1,6 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-11
+**Ultimo aggiornamento:** 2026-04-10
 
 ## Progetto
 
@@ -19,12 +19,12 @@
 | Area | Path |
 |------|------|
 | Pagine app | `app/(dm)/` — home, auth, campaigns, `characters` (+ `[id]` dettaglio), dice-roller, wiki (`wiki/*` static + `[name]` / `[category]`) |
-| Layout DM | `app/(dm)/layout.tsx` — skip link, `#main-content`, `appCanvas` (gradiente leggero) |
-| Nav / tema | `components/navigation.tsx`, `components/theme-switcher.tsx` |
+| Layout DM | `app/(dm)/layout.tsx` — skip link (`focus:top-20` sotto app bar), `#main-content`, `appCanvas` |
+| Nav / tema | `components/navigation.tsx` (drawer + backdrop su tutti i breakpoint, app bar sempre visibile), `components/theme-switcher.tsx` |
 | Scheda personaggio | `components/character/CharacterIdentityPanel.tsx` (identità + multiclasse), `CharacterTabsFields.tsx` (tab stats con modificatori, armamenti, storia, …) |
 | UI primitives (registry SoliDS) | `components/ui/` — `button` (cva + `@radix-ui/react-slot`), `card`, `input`, `textarea`, `tabs` (`@radix-ui/react-tabs`), `avatar` (`@radix-ui/react-avatar`), `full-screen-loader` (overlay `z-[100]` su lista/dettaglio personaggi) |
 | Select nativo / form | `lib/solids-native-classes.ts` — `solidsNativeSelectTrigger`; `appSelectField` in `lib/ui-classes.ts` lo riusa |
-| Classi layout copy | `lib/ui-classes.ts` — `appPageShell`, **`appPageShellCharacter`** (scheda XL), `appPanelStack`, `appCanvas`, **`appSelectField` / `appFormControl`** (touch ~48px mobile, MD3), `appFieldLabel` / `appFieldHint`, `appMuted`, … |
+| Classi layout copy | `lib/ui-classes.ts` — `appPageShell`, **`appPageShellCharacter`** (scheda XL), `appPanelStack`, **`appCanvas`** (`min-h-[calc(100dvh-3.5rem)]` sotto header h-14 su tutti i breakpoint), **`appSelectField` / `appFormControl`** (touch ~48px mobile, MD3), `appFieldLabel` / `appFieldHint`, `appMuted`, … |
 | Scheda / numeri D&D | `lib/character-sheet.ts` — `stats`/`sheet_data`, `abilityModifierFromScore`, normalizzazione |
 | Riferimento razza/classe (testo + bonus fissi SRD) | `lib/racial-class-reference.ts` — usato dalla UI statistiche |
 | Util class names | `lib/utils.ts` — `cn` (clsx + tailwind-merge) |

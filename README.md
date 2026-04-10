@@ -50,8 +50,8 @@ Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **all
 - **Componenti UI** in `components/ui/`: allineati al **registry React** del design system ([repo solids](https://github.com/soli92/solids) → `registry/solids/*`) — `Button` (class-variance-authority + Radix Slot), `Card` (compound), `Input` / `Textarea`, `Tabs` (Radix), `Avatar` (Radix), **`full-screen-loader`** (overlay caricamento). Il pacchetto npm **non** esporta questi file: restano copia curata in app.
 - **Scheda personaggio**: `components/character/CharacterIdentityPanel.tsx`, `CharacterTabsFields.tsx`; helper **`lib/character-sheet.ts`** (normalizzazione `stats`/`sheet_data`, modificatori)
 - **`<select>` nativi** (form, theme switcher): classi condivise `solidsNativeSelectTrigger` in `lib/solids-native-classes.ts` e `appSelectField` in `lib/ui-classes.ts` (stesso linguaggio visivo del `SelectTrigger` del registry).
-- Layout shell: classi in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, …) e **sidebar** di navigazione (`components/navigation.tsx`)
-- **next-themes** — selezione tema nel **pannello laterale** (desktop) o nel drawer (mobile)
+- Layout shell: classi in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, `appCanvas` sotto app bar fissa) e **navigazione a drawer** (`components/navigation.tsx`): barra superiore e pulsante menu su **tutte le larghezze**; il pannello link non è fisso su desktop (contenuto a larghezza piena, senza colonna laterale permanente)
+- **next-themes** — selezione tema nel drawer di navigazione (stesso pannello su mobile e desktop)
 - PWA: **@ducanh2912/next-pwa** (service worker in produzione; vedi nota in `AGENTS.md` su cache cross-origin e API)
 
 ---

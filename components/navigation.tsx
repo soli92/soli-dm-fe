@@ -10,9 +10,10 @@ import { UserAvatar, userDisplayName } from "@/components/UserAvatar";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
-/** Larghezza sidebar fissa — allineare a `md:pl-*` nel layout principale. */
+/** Larghezza pannello drawer navigazione. */
 export const DM_SIDEBAR_WIDTH_CLASS = "w-72";
-export const DM_MAIN_CONTENT_PAD = "md:pl-72";
+/** Nessun padding laterale: menu è drawer (hamburger) su tutti i breakpoint. */
+export const DM_MAIN_CONTENT_PAD = "";
 
 const NAV_LINKS = [
   { href: "/campaigns", label: "Campagne" },
@@ -145,16 +146,16 @@ function SidebarNavContent({ onNavigate }: SidebarNavContentProps) {
 
 export function Navigation() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    setMobileOpen(false);
+    setDrawerOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    if (!mobileOpen) return;
+    if (!drawerOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") setDrawerOpen(false);
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -163,12 +164,12 @@ export function Navigation() {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [mobileOpen]);
+  }, [drawerOpen]);
 
   return (
     <>
-      {/* Barra superiore solo mobile: logo + menu */}
-      <header className="sticky top-0 z-30 border-b border-border/70 bg-card/95 shadow-sm shadow-black/5 backdrop-blur-md dark:shadow-black/25 supports-[backdrop-filter]:bg-card/90 md:hidden">
+      {/* App bar: sempre visibile (mobile, tablet, desktop); il menu è drawer, non sidebar fissa. */}
+      <header className="sticky top-0 z-30 border-b border-border/70 bg-card/95 shadow-sm shadow-black/5 backdrop-blur-md dark:shadow-black/25 supports-[backdrop-filter]:bg-card/90">
         <div className="flex h-14 min-h-[3.5rem] items-center justify-between gap-3 px-4">
           <Link
             href="/"
@@ -190,13 +191,13 @@ export function Navigation() {
               "transition-colors hover:bg-muted",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             )}
-            aria-expanded={mobileOpen}
+            aria-expanded={drawerOpen}
             aria-controls="dm-sidebar-nav"
             aria-haspopup="true"
-            onClick={() => setMobileOpen((o) => !o)}
+            onClick={() => setDrawerOpen((o) => !o)}
           >
             <span className="sr-only">
-              {mobileOpen ? "Chiudi menu" : "Apri menu di navigazione"}
+              {drawerOpen ? "Chiudi menu" : "Apri menu di navigazione"}
             </span>
             <svg
               className="h-6 w-6"
@@ -205,7 +206,7 @@ export function Navigation() {
               viewBox="0 0 24 24"
               aria-hidden
             >
-              {mobileOpen ? (
+              {drawerOpen ? (
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -225,12 +226,12 @@ export function Navigation() {
         </div>
       </header>
 
-      {mobileOpen ? (
+      {drawerOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-[45] bg-foreground/40 backdrop-blur-[2px] md:hidden"
+          className="fixed bottom-0 left-0 right-0 top-14 z-40 bg-foreground/40 backdrop-blur-[2px]"
           aria-label="Chiudi menu di navigazione"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => setDrawerOpen(false)}
         />
       ) : null}
 
@@ -238,19 +239,19 @@ export function Navigation() {
         id="dm-sidebar-nav"
         className={cn(
           DM_SIDEBAR_WIDTH_CLASS,
-          "fixed inset-y-0 left-0 z-50 flex max-w-[calc(100vw-3rem)] flex-col border-r border-border/80 bg-card shadow-xl shadow-black/10 backdrop-blur-md",
+          "fixed bottom-0 left-0 top-14 z-50 flex max-w-[calc(100vw-3rem)] flex-col border-r border-border/80 bg-card shadow-xl shadow-black/10 backdrop-blur-md",
           "dark:bg-card/98 dark:shadow-black/40",
           "transition-transform duration-200 ease-out motion-reduce:transition-none",
-          /* Desktop (md+): sempre visibile, sopra il canvas ma senza ombra da drawer */
-          "md:z-40 md:max-w-none md:translate-x-0 md:shadow-none md:pointer-events-auto",
-          /* Mobile: drawer; chiuso = fuori schermo (no `invisible`, evita edge su resize/hydration) */
-          mobileOpen
-            ? "max-md:translate-x-0 max-md:pointer-events-auto"
-            : "max-md:-translate-x-full max-md:pointer-events-none"
+          "md:max-w-none",
+          drawerOpen
+            ? "translate-x-0 pointer-events-auto"
+            : "-translate-x-full pointer-events-none"
         )}
         aria-label="Navigazione applicazione"
+        aria-hidden={!drawerOpen}
+        inert={!drawerOpen || undefined}
       >
-        <SidebarNavContent onNavigate={() => setMobileOpen(false)} />
+        <SidebarNavContent onNavigate={() => setDrawerOpen(false)} />
       </aside>
     </>
   );
