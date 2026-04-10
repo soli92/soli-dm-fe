@@ -18,7 +18,7 @@ import {
   getRacialBonusHints,
 } from "@/lib/racial-class-reference";
 import type { CharacterGameSession, CharacterSheetData, CharacterStats } from "@/lib/types";
-import { appMuted, appSectionLabel } from "@/lib/ui-classes";
+import { appFormControl, appMuted, appSectionLabel } from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
 
 export type CharacterTabsFieldsProps = {
@@ -67,23 +67,61 @@ export function CharacterTabsFields({
     <Tabs defaultValue="stats" className="w-full">
       <TabsList
         className={cn(
-          "flex h-auto min-h-10 w-full flex-wrap justify-start gap-1.5 rounded-xl border border-border/60 bg-muted/40 p-1.5",
+          "flex w-full gap-1 rounded-xl border border-border/60 bg-muted/40 p-1.5",
+          "overflow-x-auto overscroll-x-contain scroll-smooth pb-1",
+          "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+          "sm:flex-wrap sm:overflow-x-visible sm:pb-0",
           tabsListClassName
         )}
       >
-        <TabsTrigger value="stats" className="rounded-lg">
+        <TabsTrigger
+          value="stats"
+          className={cn(
+            "min-h-12 shrink-0 snap-start rounded-lg px-4 text-sm font-medium touch-manipulation",
+            "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+            "sm:min-h-10 sm:shrink"
+          )}
+        >
           Statistiche
         </TabsTrigger>
-        <TabsTrigger value="class" className="rounded-lg">
-          Bonus e talenti
+        <TabsTrigger
+          value="class"
+          className={cn(
+            "min-h-12 shrink-0 snap-start rounded-lg px-4 text-sm font-medium touch-manipulation",
+            "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+            "sm:min-h-10 sm:shrink"
+          )}
+        >
+          Bonus
         </TabsTrigger>
-        <TabsTrigger value="armaments" className="rounded-lg">
+        <TabsTrigger
+          value="armaments"
+          className={cn(
+            "min-h-12 shrink-0 snap-start rounded-lg px-4 text-sm font-medium touch-manipulation",
+            "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+            "sm:min-h-10 sm:shrink"
+          )}
+        >
           Armamenti
         </TabsTrigger>
-        <TabsTrigger value="deposit" className="rounded-lg">
+        <TabsTrigger
+          value="deposit"
+          className={cn(
+            "min-h-12 shrink-0 snap-start rounded-lg px-4 text-sm font-medium touch-manipulation",
+            "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+            "sm:min-h-10 sm:shrink"
+          )}
+        >
           Deposito
         </TabsTrigger>
-        <TabsTrigger value="story" className="rounded-lg">
+        <TabsTrigger
+          value="story"
+          className={cn(
+            "min-h-12 shrink-0 snap-start rounded-lg px-4 text-sm font-medium touch-manipulation",
+            "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+            "sm:min-h-10 sm:shrink"
+          )}
+        >
           Storia
         </TabsTrigger>
       </TabsList>
@@ -95,7 +133,7 @@ export function CharacterTabsFields({
           arrotondato per difetto.
         </p>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
           {CHARACTER_ABILITY_KEYS.map((key) => {
             const raw = stats[key] ?? 10;
             const mod = abilityModifierFromScore(raw);
@@ -105,7 +143,7 @@ export function CharacterTabsFields({
             return (
               <div
                 key={key}
-                className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card/80 p-4 shadow-sm"
+                className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/80 p-4 shadow-sm sm:p-5"
               >
                 <div className="flex items-start justify-between gap-2">
                   <span className="text-sm font-semibold text-foreground">
@@ -131,7 +169,7 @@ export function CharacterTabsFields({
                     const n = parseInt(e.target.value, 10);
                     onChangeStat(key, Number.isFinite(n) ? n : 10);
                   }}
-                  className="font-mono"
+                  className={cn("font-mono", appFormControl)}
                 />
                 {racial != null && racial > 0 ? (
                   <p className="text-xs text-muted-foreground">
@@ -154,8 +192,8 @@ export function CharacterTabsFields({
           })}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border border-border/60 bg-muted/25 p-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
+          <div className="rounded-xl border border-border/60 bg-muted/25 p-4 sm:p-5">
             <p className={appSectionLabel}>Razza — riferimento bonus (SRD)</p>
             <p className="mt-2 text-sm font-medium text-foreground">{race}</p>
             {racialLines.length > 0 ? (
@@ -171,7 +209,7 @@ export function CharacterTabsFields({
               </p>
             )}
           </div>
-          <div className="rounded-xl border border-border/60 bg-muted/25 p-4">
+          <div className="rounded-xl border border-border/60 bg-muted/25 p-4 sm:p-5">
             <p className={appSectionLabel}>Classe — riferimento</p>
             <p className="mt-2 text-sm font-medium text-foreground">
               {characterClass}
@@ -226,12 +264,12 @@ export function CharacterTabsFields({
           onChange={(e) => onBackgroundChange(e.target.value)}
           className="min-h-[100px]"
         />
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <p className={appSectionLabel}>Sessioni di gioco</p>
           <Button
             type="button"
             variant="outline"
-            size="sm"
+            className="min-h-12 w-full touch-manipulation sm:h-9 sm:min-h-0 sm:w-auto"
             onClick={() =>
               setSessions([...sessions, newSessionEntry()])
             }

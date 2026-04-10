@@ -15,6 +15,7 @@ import {
 } from "@/lib/character-sheet";
 import type { Campaign, Character, CharacterSheetData } from "@/lib/types";
 import {
+  appFormControl,
   appListItem,
   appMuted,
   appPageShell,
@@ -171,6 +172,7 @@ function CharactersContent() {
         onChange={(e) =>
           setForm((f) => ({ ...f, character_name: e.target.value }))
         }
+        className={appFormControl}
         required
       />
       <Input
@@ -179,6 +181,7 @@ function CharactersContent() {
         onChange={(e) =>
           setForm((f) => ({ ...f, player_name: e.target.value }))
         }
+        className={appFormControl}
       />
     </>
   );
@@ -273,7 +276,11 @@ function CharactersContent() {
                 }
               />
 
-              <Button type="submit" disabled={saving || !campaignId}>
+              <Button
+                type="submit"
+                disabled={saving || !campaignId}
+                className="min-h-12 w-full touch-manipulation sm:min-h-10 sm:w-auto"
+              >
                 {saving ? "Salvataggio…" : "Crea personaggio"}
               </Button>
               {!campaignId && campaigns.length > 0 ? (

@@ -8,6 +8,8 @@ import {
   PLAYBOOK_CLASS_NAMES,
   PLAYBOOK_RACE_NAMES,
   SRD_CLASS_NAMES,
+  getSubclassOptionsForClass,
+  isSubclassInPlaybook,
   isWikiRuleCategoryId,
 } from "@/lib/tipologiche";
 
@@ -29,6 +31,24 @@ describe("tipologiche", () => {
     for (const c of SRD_CLASS_NAMES) {
       expect(PLAYBOOK_CLASS_NAMES).toContain(c);
     }
+  });
+
+  it("sottoclassi: Fighter e Warrior condividono le stesse opzioni", () => {
+    const f = getSubclassOptionsForClass("Fighter");
+    const w = getSubclassOptionsForClass("Warrior");
+    expect(f.length).toBeGreaterThan(0);
+    expect(f).toEqual(w);
+  });
+
+  it("sottoclassi: Wizard ha le scuole SRD", () => {
+    const o = getSubclassOptionsForClass("Wizard");
+    expect(o.some((s) => s.includes("Evocation"))).toBe(true);
+  });
+
+  it("isSubclassInPlaybook: stringa vuota è valida", () => {
+    expect(isSubclassInPlaybook("Rogue", "")).toBe(true);
+    expect(isSubclassInPlaybook("Rogue", "Thief")).toBe(true);
+    expect(isSubclassInPlaybook("Rogue", "Inventata")).toBe(false);
   });
 
   it("razze playbook: 12 voci (SRD + estese)", () => {

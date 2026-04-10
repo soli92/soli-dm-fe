@@ -24,7 +24,7 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
   - Salvataggio automatico
 
 ### 👤 Gestione Personaggi
-- **Pannello identità** (sempre visibile sopra le tab): classe principale, razza, sottoclasse/archetipo, allineamento, livello; **multiclasse opzionale** (seconda classe + livelli, salvati in `sheet_data.multiclass_class` / `multiclass_level`)
+- **Pannello identità** (sempre visibile sopra le tab): classe principale, razza, **sottoclasse da tipologica SRD** (filtrata per classe + «Altro» testo libero), allineamento, livello; **multiclasse opzionale** (`sheet_data.multiclass_class` / `multiclass_level`)
 - **Tab scheda**: *Statistiche* (punteggi con **modificatori D&D 5e** e riquadri di riferimento bonus razza SRD / tiri salvezza classe da `lib/racial-class-reference.ts`), *Bonus e talenti* (note libere), *Armamenti*, *Deposito*, *Storia* (background + **sessioni di gioco** con titolo/data/note)
 - Dati estesi in Supabase: JSON **`sheet_data`** + colonna **`background`**; migrazione DB: **`soli-dm-be/scripts/supabase-alignment.sql`** (o `SETUP.md`)
 - Lista personaggi → **`/characters/[id]`** con **`PUT /api/characters/:id`**
@@ -42,7 +42,7 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
 - **Core Rules**: Ability Scores, Combat, Saving Throws, Resting, Multiclassing
 
 ### 📑 Tipologiche (`lib/tipologiche/`)
-Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **allineamenti** PHB (9), **classi SRD** (12, wiki/API) e **`PLAYBOOK_CLASS_NAMES`** per i form personaggio (SRD + **Warrior**), **razze playbook** (12), **stati** campagna/personaggio, **preset** range livelli e notazioni dadi, **id categorie** regole wiki. Gli elenchi che esistono anche sul backend (`soli-dm-be` → `src/lib/tipologiche.ts`) vanno aggiornati **in parallelo** dove serve (vedi commenti nei file sorgente).
+Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **allineamenti** PHB (9), **classi SRD** (12, wiki/API) e **`PLAYBOOK_CLASS_NAMES`** (SRD + **Warrior**), **`SUBCLASSES_BY_CLASS`** / **`getSubclassOptionsForClass`** (sottoclassi SRD per classe + opzione «Altro» testo libero), **razze playbook** (12), **stati** campagna/personaggio, **preset** range livelli e notazioni dadi, **id categorie** regole wiki. Gli elenchi che esistono anche sul backend (`soli-dm-be` → `src/lib/tipologiche.ts`) vanno aggiornati **in parallelo** dove serve (vedi commenti nei file sorgente).
 
 ### 🎨 UI e tema (SoliDS)
 - **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk)
@@ -169,12 +169,12 @@ lib/
 ├── character-sheet.ts                        # stats/sheet_data, modificatori 5e
 ├── racial-class-reference.ts                 # hint bonus razza / classe (riferimento SRD semplificato)
 ├── solids-native-classes.ts                  # stile `<select>` allineato a SoliDS SelectTrigger
-├── tipologiche/                              # liste D&D / app / dadi / wiki (re-export index.ts)
+├── tipologiche/                              # dnd, subclasses, app, dice, wiki (re-export index.ts)
 ├── ui-classes.ts                             # classi layout / tipografia condivise
 └── utils.ts                                  # cn (clsx + tailwind-merge)
 
 tests/                                        # Vitest (+ Testing Library dove serve)
-├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts, solids-ui.test.ts
+├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts, subclasses.test.ts, solids-ui.test.ts
 ├── client.test.ts, character-sheet.test.ts, characters-api.test.ts, racial-class-reference.test.ts, useCampaigns.test.tsx
 ```
 
@@ -234,7 +234,7 @@ npm start
 
 ### Test
 
-- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, `updateCharacter`, `lib/character-sheet`, `lib/racial-class-reference`, hook campagne, tipologiche, primitive UI SoliDS, `formatAuthError`, `cn`, …).
+- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, `updateCharacter`, `lib/character-sheet`, `lib/racial-class-reference`, **`subclasses.test.ts`** / tipologiche, hook campagne, primitive UI SoliDS, `formatAuthError`, `cn`, …).
 - In **CI** (`.github/workflows/ci.yml`): `npm ci` poi `lint` → `type-check` → `test` → `build`.
 
 ### Componenti UI

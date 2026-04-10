@@ -17,9 +17,10 @@ import {
 } from "@/lib/character-sheet";
 import type { Character, CharacterSheetData } from "@/lib/types";
 import {
+  appFormControl,
   appLinkBack,
   appMuted,
-  appPageShellWide,
+  appPageShellCharacter,
   appPageTitle,
   appPanelStack,
   appTitle,
@@ -136,12 +137,12 @@ export default function CharacterDetailPage() {
       />
       <main
         className={cn(
-          appPageShellWide,
+          appPageShellCharacter,
           loading && "pointer-events-none invisible"
         )}
         aria-hidden={loading}
       >
-        <div className="mx-auto max-w-3xl space-y-8">
+        <div className="mx-auto w-full max-w-full space-y-8">
           <div className="space-y-2">
             <Link href={listHref} className={appLinkBack}>
               ← Torna ai personaggi
@@ -184,6 +185,7 @@ export default function CharacterDetailPage() {
                       d ? { ...d, character_name: e.target.value } : d
                     )
                   }
+                  className={appFormControl}
                   required
                 />
                 <Input
@@ -194,6 +196,7 @@ export default function CharacterDetailPage() {
                       d ? { ...d, player_name: e.target.value } : d
                     )
                   }
+                  className={appFormControl}
                 />
               </div>
 
@@ -243,14 +246,19 @@ export default function CharacterDetailPage() {
                 }
               />
 
-              <div className="flex flex-wrap gap-3">
-                <Button type="submit" disabled={saving}>
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="min-h-12 w-full touch-manipulation sm:min-h-10 sm:w-auto"
+                >
                   {saving ? "Salvataggio…" : "Salva modifiche"}
                 </Button>
                 <Link
                   href={listHref}
                   className={cn(
                     buttonVariants({ variant: "outline", size: "default" }),
+                    "inline-flex min-h-12 w-full items-center justify-center touch-manipulation sm:min-h-10 sm:w-auto",
                     saving && "pointer-events-none opacity-50"
                   )}
                 >

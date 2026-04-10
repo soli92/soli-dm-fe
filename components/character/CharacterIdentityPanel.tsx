@@ -2,11 +2,19 @@
 
 import { Input } from "@/components/ui/input";
 import {
+  CUSTOM_SUBCLASS_SELECT_VALUE,
   DND_ALIGNMENTS,
+  getSubclassOptionsForClass,
   PLAYBOOK_CLASS_NAMES,
   PLAYBOOK_RACE_NAMES,
 } from "@/lib/tipologiche";
-import { appSelectField, appSectionLabel } from "@/lib/ui-classes";
+import {
+  appFieldHint,
+  appFieldLabel,
+  appFormControl,
+  appSelectField,
+  appSectionLabel,
+} from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
 
 export type CharacterIdentityPanelProps = {
@@ -29,6 +37,26 @@ export type CharacterIdentityPanelProps = {
   onMulticlassLevelChange: (v: string) => void;
 };
 
+function NativeField({
+  label,
+  hint,
+  children,
+  className: shellClass,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col gap-2", shellClass)}>
+      <span className={appFieldLabel}>{label}</span>
+      {hint ? <p className={appFieldHint}>{hint}</p> : null}
+      {children}
+    </div>
+  );
+}
+
 export function CharacterIdentityPanel({
   className,
   topSlot,
@@ -48,27 +76,44 @@ export function CharacterIdentityPanel({
   onMulticlassLevelChange,
 }: CharacterIdentityPanelProps) {
   const mcActive = Boolean(multiclass_class?.trim());
+  const subOptions = getSubclassOptionsForClass(class_name);
+  const trimmedSub = subclass.trim();
+  const isCustomSubclass =
+    Boolean(trimmedSub) && !subOptions.includes(trimmedSub);
+  const subclassSelectValue = !trimmedSub
+    ? ""
+    : isCustomSubclass
+      ? CUSTOM_SUBCLASS_SELECT_VALUE
+      : trimmedSub;
+  const showSubclassText =
+    subclassSelectValue === CUSTOM_SUBCLASS_SELECT_VALUE ||
+    isCustomSubclass;
 
   return (
     <div
       className={cn(
-        "space-y-5 rounded-2xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/[0.06] p-5 shadow-md sm:p-6",
+        "space-y-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/[0.06] p-5 shadow-md sm:p-6 md:p-7",
         className
       )}
     >
       <div>
         <p className={appSectionLabel}>Identità del personaggio</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Classe, razza, sottoclasse, allineamento e multiclasse sono sempre visibili qui;
-          le statistiche e il resto della scheda sono nelle tab sotto.
+        <p className={cn(appFieldHint, "mt-2 max-w-prose")}>
+          Classe, razza, sottoclasse (elenco SRD), allineamento e multiclasse.
+          Le statistiche sono nelle tab sotto. Controlli con altezza touch
+          confortevole su mobile (Material Design 3).
         </p>
       </div>
 
-      {topSlot ? <div className="space-y-3">{topSlot}</div> : null}
+      {topSlot ? <div className="space-y-4">{topSlot}</div> : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-2 text-sm font-medium text-foreground sm:col-span-1">
-          Classe principale
+      <div
+        className={cn(
+          "grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-5",
+          "lg:grid-cols-3 lg:gap-x-5"
+        )}
+      >
+        <NativeField label="Classe principale">
           <select
             className={appSelectField}
             value={class_name}
@@ -86,10 +131,9 @@ export function CharacterIdentityPanel({
               </option>
             ))}
           </select>
-        </label>
+        </NativeField>
 
-        <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-          Razza
+        <NativeField label="Razza">
           <select
             className={appSelectField}
             value={race}
@@ -107,17 +151,9 @@ export function CharacterIdentityPanel({
               </option>
             ))}
           </select>
-        </label>
+        </NativeField>
 
-        <Input
-          label="Sottoclasse / archetipo"
-          value={subclass}
-          onChange={(e) => onSubclassChange(e.target.value)}
-          placeholder="es. Champion, Thief, Life Domain…"
-        />
-
-        <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-          Allineamento
+        <NativeField label="Allineamento">
           <select
             className={appSelectField}
             value={alignment}
@@ -135,28 +171,76 @@ export function CharacterIdentityPanel({
               </option>
             ))}
           </select>
-        </label>
+        </NativeField>
 
-        <Input
+        <NativeField
           label="Livello (classe principale)"
-          type="number"
-          min={1}
-          max={20}
-          value={level}
-          onChange={(e) => onLevelChange(e.target.value)}
-        />
+          hint="1–20. In multiclasse somma i livelli delle classi."
+        >
+          <Input
+            type="number"
+            min={1}
+            max={20}
+            value={level}
+            onChange={(e) => onLevelChange(e.target.value)}
+            className={appFormControl}
+            aria-label="Livello classe principale"
+          />
+        </NativeField>
+
+        <div className="flex flex-col gap-2 sm:col-span-2 lg:col-span-3">
+          <span className={appFieldLabel}>Sottoclasse / percorso / dominio</span>
+          <p className={appFieldHint}>
+            Opzioni tipiche SRD per la classe scelta; usa «Altro» per
+            homebrew o sottoclassi non in elenco.
+          </p>
+          <select
+            className={appSelectField}
+            value={subclassSelectValue}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "") onSubclassChange("");
+              else if (v === CUSTOM_SUBCLASS_SELECT_VALUE) onSubclassChange("");
+              else onSubclassChange(v);
+            }}
+            aria-label="Sottoclasse da tipologica"
+          >
+            <option value="">— Nessuna —</option>
+            {subOptions.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+            <option value={CUSTOM_SUBCLASS_SELECT_VALUE}>
+              Altro (testo libero)
+            </option>
+          </select>
+          {showSubclassText ? (
+            <Input
+              label="Nome personalizzato"
+              value={subclass}
+              onChange={(e) => onSubclassChange(e.target.value)}
+              placeholder="Scrivi la sottoclasse (anche se non è in elenco)"
+              className={appFormControl}
+            />
+          ) : null}
+        </div>
       </div>
 
       <div
-        className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-4"
+        className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-4 sm:p-5"
         data-testid="multiclass-block"
       >
-        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Multiclasse (opzionale)
+        <p className={appSectionLabel}>Multiclasse (opzionale)</p>
+        <p className={cn(appFieldHint, "mt-1")}>
+          Seconda classe e livelli dedicati; resta vuoto se monoclassa.
         </p>
-        <div className="mt-3 grid gap-4 sm:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-            Seconda classe
+        <div
+          className={cn(
+            "mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-4"
+          )}
+        >
+          <NativeField label="Seconda classe">
             <select
               className={appSelectField}
               value={multiclass_class || ""}
@@ -174,17 +258,23 @@ export function CharacterIdentityPanel({
                 </option>
               ))}
             </select>
-          </label>
-          <Input
+          </NativeField>
+          <NativeField
             label="Livelli nella seconda classe"
-            type="number"
-            min={0}
-            max={20}
-            value={multiclass_level}
-            onChange={(e) => onMulticlassLevelChange(e.target.value)}
-            disabled={!mcActive}
-            placeholder={mcActive ? "es. 2" : "—"}
-          />
+            hint={mcActive ? "Livelli solo in questa classe." : undefined}
+          >
+            <Input
+              type="number"
+              min={0}
+              max={20}
+              value={multiclass_level}
+              onChange={(e) => onMulticlassLevelChange(e.target.value)}
+              disabled={!mcActive}
+              placeholder={mcActive ? "es. 2" : "—"}
+              className={appFormControl}
+              aria-label="Livelli seconda classe"
+            />
+          </NativeField>
         </div>
       </div>
     </div>

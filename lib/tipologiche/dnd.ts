@@ -56,6 +56,8 @@ export const PLAYBOOK_CLASS_NAMES = [
 
 export type PlaybookClassName = (typeof PLAYBOOK_CLASS_NAMES)[number];
 
+/** Sottoclassi SRD per classe: vedi `subclasses.ts` (`SUBCLASSES_BY_CLASS`, `getSubclassOptionsForClass`). */
+
 /**
  * Razze offerte in creazione guidata (include SRD + estese dal fallback wiki backend).
  */

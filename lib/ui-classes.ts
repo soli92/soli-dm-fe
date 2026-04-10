@@ -10,11 +10,16 @@ import { solidsNativeSelectTrigger } from "@/lib/solids-native-classes";
 export const appCanvas =
   "min-h-[calc(100dvh-3.5rem)] bg-gradient-to-b from-muted/50 via-muted/30 to-background text-foreground motion-safe:transition-colors md:min-h-dvh";
 
-/** Contenitore centrato con padding orizzontale coerente. */
-export const appPageShell = "mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10";
+/** Contenitore centrato: respiro maggiore su tablet, max-width su desktop largo. */
+export const appPageShell =
+  "mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-8 md:py-10 lg:max-w-4xl lg:px-8";
+
+/** Scheda personaggio / viste dense: più larghezza su XL. */
+export const appPageShellCharacter =
+  "mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-8 md:py-10 lg:max-w-4xl xl:max-w-5xl xl:px-10";
 
 export const appPageShellWide =
-  "mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10";
+  "mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:py-10 lg:px-8";
 
 /** Ombre tipo elevation MD (layered surfaces). */
 export const appElevation0 = "shadow-none";
@@ -32,7 +37,7 @@ export const appPanel = cn(
 );
 
 export const appPanelStack = cn(
-  "flex flex-col gap-5 rounded-2xl border border-border/80 bg-card/95 p-6 text-card-foreground backdrop-blur-[2px] sm:p-8",
+  "flex flex-col gap-5 rounded-2xl border border-border/80 bg-card/95 p-5 text-card-foreground backdrop-blur-[2px] sm:gap-6 sm:p-7 md:p-8",
   appElevation1
 );
 
@@ -49,12 +54,30 @@ export const appTitle =
 export const appSectionLabel =
   "text-xs font-semibold uppercase tracking-wider text-muted-foreground";
 
+/** Etichetta campo form (MD3 / SoliDS). */
+export const appFieldLabel =
+  "text-sm font-medium leading-tight text-foreground";
+
+/** Testo di supporto sotto etichetta. */
+export const appFieldHint =
+  "text-xs leading-snug text-muted-foreground";
+
 export const appBody = "text-base leading-relaxed text-foreground";
 
 export const appBodySmall = "text-sm leading-relaxed text-muted-foreground";
 
-/** Select nativo: stesso linguaggio visivo di SelectTrigger SoliDS + altezza minima form. */
-export const appSelectField = cn(solidsNativeSelectTrigger, "min-h-10");
+/**
+ * Select nativo (SoliDS): target touch MD3 ~48px su mobile, compatto da sm.
+ */
+export const appSelectField = cn(
+  solidsNativeSelectTrigger,
+  "min-h-12 px-3 py-2.5 text-base touch-manipulation sm:min-h-10 sm:py-2 sm:text-sm"
+);
+
+/** Input / number in form scheda: stessa logica touch-first. */
+export const appFormControl = cn(
+  "h-auto min-h-12 touch-manipulation py-2.5 text-base sm:min-h-10 sm:py-2 sm:text-sm"
+);
 
 /** @deprecated Usa appDisplay / appHeadline; mantenuto per compatibilità import. */
 export const appPageTitle = appHeadline;
