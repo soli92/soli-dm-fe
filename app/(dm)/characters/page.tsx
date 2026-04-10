@@ -3,16 +3,22 @@
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { CharacterTabsFields } from "@/components/character/CharacterTabsFields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCampaigns, getCharacters, createCharacter } from "@/lib/api";
-import type { Campaign, Character } from "@/lib/types";
+import {
+  defaultAbilityStats,
+  emptySheetData,
+} from "@/lib/character-sheet";
+import type { Campaign, Character, CharacterSheetData } from "@/lib/types";
 import {
   DND_ALIGNMENTS,
   PLAYBOOK_RACE_NAMES,
   SRD_CLASS_NAMES,
 } from "@/lib/tipologiche";
 import {
+  appListItem,
   appMuted,
   appPageShell,
   appPageTitle,
@@ -20,6 +26,7 @@ import {
   appSelectField,
   appTitle,
 } from "@/lib/ui-classes";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 function CharactersContent() {
@@ -38,6 +45,9 @@ function CharactersContent() {
     player_name: "",
     level: "1",
     alignment: "Neutral" as (typeof DND_ALIGNMENTS)[number],
+    background: "",
+    stats: defaultAbilityStats(),
+    sheet_data: emptySheetData(),
   });
 
   useEffect(() => {
@@ -56,7 +66,6 @@ function CharactersContent() {
     })();
   }, []);
 
-  /** Una sola campagna: preseleziona per evitare submit disabilitato senza motivo chiaro. */
   useEffect(() => {
     if (campaigns.length !== 1) return;
     const only = campaigns[0]?.id;
@@ -78,6 +87,13 @@ function CharactersContent() {
     })();
   }, [campaignId]);
 
+  function patchSheet(patch: Partial<CharacterSheetData>) {
+    setForm((f) => ({
+      ...f,
+      sheet_data: { ...emptySheetData(), ...f.sheet_data, ...patch },
+    }));
+  }
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!campaignId) {
@@ -98,13 +114,22 @@ function CharactersContent() {
         player_name: form.player_name.trim() || null,
         level: parseInt(form.level, 10) || 1,
         alignment: form.alignment,
+        background: form.background.trim() || null,
+        stats: form.stats,
+        sheet_data: form.sheet_data,
       });
       toast.success("Personaggio creato.");
-      setForm((f) => ({
-        ...f,
+      setForm({
         character_name: "",
+        class_name: "Fighter",
+        race: "Human",
         player_name: "",
-      }));
+        level: "1",
+        alignment: "Neutral",
+        background: "",
+        stats: defaultAbilityStats(),
+        sheet_data: emptySheetData(),
+      });
       const refreshed = await getCharacters(campaignId || undefined);
       setList(refreshed);
     } catch (err) {
@@ -113,6 +138,79 @@ function CharactersContent() {
       setSaving(false);
     }
   }
+
+  const classTabTop = (
+    <>
+      <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+        Classe
+        <select
+          className={appSelectField}
+          value={form.class_name}
+          onChange={(e) =>
+            setForm((f) => ({
+              ...f,
+              class_name: e.target.value as (typeof SRD_CLASS_NAMES)[number],
+            }))
+          }
+          aria-label="Classe del personaggio"
+        >
+          {SRD_CLASS_NAMES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+        Razza
+        <select
+          className={appSelectField}
+          value={form.race}
+          onChange={(e) =>
+            setForm((f) => ({
+              ...f,
+              race: e.target.value as (typeof PLAYBOOK_RACE_NAMES)[number],
+            }))
+          }
+          aria-label="Razza del personaggio"
+        >
+          {PLAYBOOK_RACE_NAMES.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+        Allineamento
+        <select
+          className={appSelectField}
+          value={form.alignment}
+          onChange={(e) =>
+            setForm((f) => ({
+              ...f,
+              alignment: e.target.value as (typeof DND_ALIGNMENTS)[number],
+            }))
+          }
+          aria-label="Allineamento"
+        >
+          {DND_ALIGNMENTS.map((a) => (
+            <option key={a} value={a}>
+              {a}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Input
+        label="Livello"
+        type="number"
+        min={1}
+        max={20}
+        value={form.level}
+        onChange={(e) => setForm((f) => ({ ...f, level: e.target.value }))}
+      />
+    </>
+  );
 
   return (
     <main className={appPageShell}>
@@ -130,8 +228,8 @@ function CharactersContent() {
         <section className={appPanelStack}>
           <h2 className={appTitle}>Nuovo personaggio</h2>
           <p className={`${appMuted} text-sm`}>
-            Ogni personaggio è legato a una campagna. Scegli la campagna qui sotto
-            (obbligatoria per creare); la lista in fondo usa la stessa selezione.
+            Ogni personaggio è legato a una campagna. Compila le schede qui
+            sotto; la lista in fondo usa la stessa campagna selezionata.
           </p>
           {campaigns.length === 0 ? (
             <p className="rounded-lg border border-border/80 bg-muted/40 px-4 py-3 text-sm text-foreground">
@@ -145,111 +243,66 @@ function CharactersContent() {
               e torna qui per aggiungere personaggi.
             </p>
           ) : null}
-          <form onSubmit={handleCreate} className="flex flex-col gap-4">
-            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-              Campagna <span className="text-destructive">*</span>
-              <select
-                value={campaignId}
-                onChange={(e) => setCampaignId(e.target.value)}
-                className={appSelectField}
-                aria-label="Campagna a cui associare il personaggio"
-                aria-required
-              >
-                <option value="">— Seleziona una campagna —</option>
-                {campaigns.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-              <span className="text-xs font-normal text-muted-foreground">
-                Con «Tutte» (nessuna scelta) puoi solo sfogliare l’elenco; per creare
-                serve una campagna.
-              </span>
-            </label>
-            <Input
-              label="Nome personaggio"
-              value={form.character_name}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, character_name: e.target.value }))
+          <form onSubmit={handleCreate} className="flex flex-col gap-6">
+            <div className="space-y-4 rounded-xl border border-border/60 bg-muted/15 p-4 sm:p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Anagrafica
+              </p>
+              <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
+                Campagna <span className="text-destructive">*</span>
+                <select
+                  value={campaignId}
+                  onChange={(e) => setCampaignId(e.target.value)}
+                  className={appSelectField}
+                  aria-label="Campagna a cui associare il personaggio"
+                  aria-required
+                >
+                  <option value="">— Seleziona una campagna —</option>
+                  {campaigns.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-xs font-normal text-muted-foreground">
+                  Con «Tutte» (nessuna scelta) puoi solo sfogliare l’elenco; per
+                  creare serve una campagna.
+                </span>
+              </label>
+              <Input
+                label="Nome personaggio"
+                value={form.character_name}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, character_name: e.target.value }))
+                }
+                required
+              />
+              <Input
+                label="Giocatore (opzionale)"
+                value={form.player_name}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, player_name: e.target.value }))
+                }
+              />
+            </div>
+
+            <CharacterTabsFields
+              stats={form.stats}
+              onChangeStat={(key, value) =>
+                setForm((f) => ({
+                  ...f,
+                  stats: { ...f.stats, [key]: value },
+                }))
               }
-              required
-            />
-            <Input
-              label="Giocatore (opzionale)"
-              value={form.player_name}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, player_name: e.target.value }))
+              sheet={form.sheet_data}
+              patchSheet={patchSheet}
+              classTabTop={classTabTop}
+              background={form.background}
+              onBackgroundChange={(background) =>
+                setForm((f) => ({ ...f, background }))
               }
             />
-            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-              Classe
-              <select
-                className={appSelectField}
-                value={form.class_name}
-                onChange={(e) =>
-                  setForm((f) => ({
-                    ...f,
-                    class_name: e.target.value as (typeof SRD_CLASS_NAMES)[number],
-                  }))
-                }
-                aria-label="Classe del personaggio"
-              >
-                {SRD_CLASS_NAMES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-              Razza
-              <select
-                className={appSelectField}
-                value={form.race}
-                onChange={(e) =>
-                  setForm((f) => ({
-                    ...f,
-                    race: e.target.value as (typeof PLAYBOOK_RACE_NAMES)[number],
-                  }))
-                }
-                aria-label="Razza del personaggio"
-              >
-                {PLAYBOOK_RACE_NAMES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
-              Allineamento
-              <select
-                className={appSelectField}
-                value={form.alignment}
-                onChange={(e) =>
-                  setForm((f) => ({
-                    ...f,
-                    alignment: e.target.value as (typeof DND_ALIGNMENTS)[number],
-                  }))
-                }
-                aria-label="Allineamento"
-              >
-                {DND_ALIGNMENTS.map((a) => (
-                  <option key={a} value={a}>
-                    {a}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Input
-              label="Livello"
-              type="number"
-              min={1}
-              max={20}
-              value={form.level}
-              onChange={(e) => setForm((f) => ({ ...f, level: e.target.value }))}
-            />
+
             <Button type="submit" disabled={saving || !campaignId}>
               {saving ? "Salvataggio…" : "Crea personaggio"}
             </Button>
@@ -276,14 +329,23 @@ function CharactersContent() {
           ) : (
             <ul className="flex flex-col gap-3">
               {list.map((ch) => (
-                <li
-                  key={ch.id}
-                  className="rounded-2xl border border-border/80 bg-card p-4 text-card-foreground shadow-sm"
-                >
-                  <span className="font-semibold">{ch.character_name}</span>
-                  <span className={`${appMuted} block text-sm leading-relaxed`}>
-                    {ch.class_name} {ch.race} · liv. {ch.level}
-                  </span>
+                <li key={ch.id}>
+                  <Link
+                    href={`/characters/${ch.id}`}
+                    className={cn(appListItem, "no-underline")}
+                  >
+                    <span className="font-semibold text-foreground">
+                      {ch.character_name}
+                    </span>
+                    <span className={`${appMuted} block text-sm leading-relaxed`}>
+                      {ch.class_name} {ch.race} · liv. {ch.level}
+                    </span>
+                    <span
+                      className={`${appMuted} mt-1 block text-xs font-medium text-primary`}
+                    >
+                      Apri scheda →
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

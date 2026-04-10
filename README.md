@@ -24,16 +24,14 @@ Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScri
   - Salvataggio automatico
 
 ### 👤 Gestione Personaggi
-- Crea personaggi per campagna
-- Stats D&D (STR, DEX, CON, INT, WIS, CHA)
-- Classe, razza, livello, allineamento, background
-- Visualizzazione lista personaggi
+- Crea personaggi per campagna con **scheda a tab**: Statistiche (caratteristiche), Classe (classe/razza/livello/allineamento, sottoclasse, bonus e malus), Armamenti, Deposito, Storia (background + **sessioni di gioco** con titolo/data/note)
+- Dati estesi persistiti in Supabase nella colonna JSON **`sheet_data`** (e `background` per il testo libero storia); sul database va eseguito lo script in **`soli-dm-be/scripts/supabase-alignment.sql`** (o l’`ALTER` equivalente in `SETUP.md`)
+- Lista personaggi con link alla **scheda dettaglio** (`/characters/[id]`) e salvataggio via **`PUT /api/characters/:id`**
 
 ### 🎲 Simulatore Dadi
-- Lancia dadi (d4, d6, d8, d10, d12, d20)
-- Notazione dadi: `4d6`, `2d20+5`, etc.
-- Storico tiri
-- Tiri multipli
+- Lancia dadi in notazione **`NdX`** (es. `4d6`, `2d20`) — senza modificatori (`+5` non è accettato dall’API)
+- Storico tiri per campagna (colonna DB **`dice_notation`**; vedi script SQL nel backend se lo schema usa ancora solo `notation`)
+- Tiri multipli (`/api/dice/roll-multiple`)
 
 ### 📚 Wiki D&D
 - **12 Classi**: Barbarian, Bard, Cleric, Druid, Fighter, Monk, Paladin, Ranger, Rogue, Sorcerer, Warlock, Wizard
@@ -170,7 +168,7 @@ lib/
 
 tests/                                        # Vitest (+ Testing Library dove serve)
 ├── auth-errors.test.ts, utils.test.ts, tipologiche.test.ts, solids-ui.test.ts
-├── client.test.ts, useCampaigns.test.tsx
+├── client.test.ts, character-sheet.test.ts, characters-api.test.ts, useCampaigns.test.tsx
 ```
 
 ---
@@ -190,7 +188,11 @@ NEXT_PUBLIC_API_URL=https://soli-dm-be.onrender.com
 - `PUT /api/campaigns/:id` — Modifica campagna
 - `DELETE /api/campaigns/:id` — Elimina campagna
 - `GET /api/characters?campaign_id=:id` — Personaggi campagna
+- `GET /api/characters/:id` — Dettaglio personaggio
+- `POST /api/characters` — Crea personaggio (`stats`, `sheet_data`, `background`, …)
+- `PUT /api/characters/:id` — Aggiorna scheda
 - `POST /api/dice/roll` — Lancia dadi
+- `GET /api/dice/history?campaign_id=:id` — Storico lanci
 - `GET /api/classes` — Wiki classi
 - `GET /api/races` — Wiki razze
 - `GET /api/deities` — Wiki divinità
@@ -225,7 +227,7 @@ npm start
 
 ### Test
 
-- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, hook campagne, tipologiche, primitive UI SoliDS, `formatAuthError`, `cn`, …).
+- **`npm test`** — `vitest run` su `tests/*.test.ts(x)` (client API, `updateCharacter`, helper scheda `lib/character-sheet`, hook campagne, tipologiche, primitive UI SoliDS, `formatAuthError`, `cn`, …).
 - In **CI** (`.github/workflows/ci.yml`): `npm ci` poi `lint` → `type-check` → `test` → `build`.
 
 ### Componenti UI

@@ -35,3 +35,20 @@ export async function createCharacter(
   }
   return res.data;
 }
+
+export async function updateCharacter(
+  id: string,
+  data: Partial<CreateCharacterInput> & Record<string, unknown>
+): Promise<Character> {
+  const res = await fetchJson<ApiItemResponse<Character>>(
+    `/api/characters/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }
+  );
+  if (!res.data) {
+    throw new Error("Risposta API senza dati del personaggio aggiornato.");
+  }
+  return res.data;
+}

@@ -34,6 +34,23 @@ export type CreateCampaignInput = {
 
 export type CharacterStats = Record<string, number>;
 
+/** Voce di diario per sessione di gioco (persistita in `sheet_data.sessions`). */
+export type CharacterGameSession = {
+  id: string;
+  title: string;
+  session_date?: string;
+  notes: string;
+};
+
+/** Dati scheda oltre alle statistiche base (colonna JSON `sheet_data` sul backend). */
+export type CharacterSheetData = {
+  subclass?: string | null;
+  bonuses_penalties?: string;
+  armaments?: string;
+  deposit?: string;
+  sessions?: CharacterGameSession[];
+};
+
 /** Body accettato da POST /api/characters */
 export type CreateCharacterInput = {
   campaign_id: string;
@@ -46,6 +63,7 @@ export type CreateCharacterInput = {
   alignment?: string;
   background?: string | null;
   stats?: CharacterStats;
+  sheet_data?: CharacterSheetData;
 };
 
 export type Character = {
@@ -60,6 +78,7 @@ export type Character = {
   alignment: string;
   background: string | null;
   stats: CharacterStats;
+  sheet_data?: CharacterSheetData;
   status?: string;
   created_at?: string;
 };
@@ -74,7 +93,7 @@ export type DiceRollRow = {
   id: string;
   campaign_id: string;
   character_id: string | null;
-  notation: string;
+  dice_notation: string;
   result_total: number;
   result_rolls: number[];
   created_at?: string;

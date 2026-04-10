@@ -133,7 +133,7 @@ export default function DiceRollerPage() {
             <ul className={`text-sm ${appMuted} space-y-1 max-h-48 overflow-y-auto`}>
               {history.map((h) => (
                 <li key={h.id}>
-                  {h.notation}: {h.result_rolls?.join(", ") ?? "—"} ={" "}
+                  {h.dice_notation}: {h.result_rolls?.join(", ") ?? "—"} ={" "}
                   <strong className="text-foreground">{h.result_total}</strong>
                 </li>
               ))}

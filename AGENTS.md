@@ -33,7 +33,7 @@
 ## Test (Vitest)
 
 - `npm test` / `npm run test:watch`
-- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/solids-ui.test.ts`, `tests/client.test.ts`, `tests/useCampaigns.test.tsx`
+- File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/solids-ui.test.ts`, `tests/client.test.ts`, `tests/character-sheet.test.ts`, `tests/characters-api.test.ts`, `tests/useCampaigns.test.tsx`
 - Setup: `vitest.config.ts` → `vitest.setup.ts`; `@testing-library/react` dove serve
 
 ## Variabili d’ambiente
