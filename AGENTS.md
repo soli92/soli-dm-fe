@@ -8,6 +8,8 @@
 
 **URL produzione:** https://soli-dm-fe.vercel.app (Vercel). Backend tipico: https://soli-dm-be.onrender.com
 
+**Memoria sviluppo AI-assisted:** [`AI_LOG.md`](./AI_LOG.md)
+
 ## Checklist prima di una PR
 
 1. `npm run lint` · `npm run type-check` · `npm test` · `npm run build` (allineato a `.github/workflows/ci.yml`, Node **22** in CI).
