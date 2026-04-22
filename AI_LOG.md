@@ -8,7 +8,7 @@ Memoria di sviluppo AI-assisted. Annotazioni sui prompt, decisioni e pattern eme
 
 Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon Master**: shell UI con **@soli92/solids**, componenti primitivi, wiki, mappa, PWA, **Vitest** e **GitHub Actions** (lint, typecheck, test, build). Partenza con **shadcn/ui** poi rimozione Radix a favore di Tailwind+Solids.
 
-**Stack AI usato (inferito)**: assistenza IDE/LLM (serie di commit “fix: create simple X component”); file `cd52603 📝 Aggiungi AGENTS.md` per contesto agenti — **non** menziona “Cursor” nel messaggio ma allinea al pattern ecosistema.
+**Stack AI usato (inferito; aggiornato 2026-04-22)**: assistenza **IDE/LLM probabile** (serie `fix: create simple …`). `AGENTS.md` esplicito (`cd52603`). Pattern `.cursor/rules` ecosistema soli92. Nessun SDK LLM nel frontend DM. Messaggi commit lunghi multi-scope (`6a4d4cd`, `73c4d40`).
 
 **Periodo di sviluppo**: 2026-04-02 (`9be38af` Initial commit) → 2026-04-09 (`ea2b362` fix characters UX).
 
@@ -33,9 +33,14 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 - **Tailwind** con preset **solids** (`ae9e2d0`).
 - Uso iniziale **shadcn/ui** e Radix.
 
-**Prompt chiave usati**: > [TODO da compilare manualmente]
+**Prompt chiave usati**
 
-**Lezioni apprese**: > [TODO da compilare manualmente]
+> **Prompt [inferito]**: "Scaffold Next 15 + Tailwind preset Solids + shadcn, layout, provider tema, home hero, componenti Button/Input/Card."
+> *Evidenza*: `58ff7c0`–`5baf006`, messaggi `feat: add …`.
+
+**Lezioni apprese**
+
+- **shadcn** richiede pinning dipendenze (`8a2a733`, `3c3c5eb`) per evitare versioni inesistenti.
 
 ### Fase 2 — Rimozione Radix, componenti “simple”, API client, SETUP
 
@@ -51,9 +56,14 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 
 - **Riduzione dipendenze** Radix (`d28fe12`) per allineamento al design system Solids.
 
-**Prompt chiave usati**: > [TODO da compilare manualmente]
+**Prompt chiave usati**
 
-**Lezioni apprese**: > [TODO da compilare manualmente]
+> **Prompt [inferito]**: "Rimuovi @radix-ui, crea componenti Tailwind-only minimali, aggiungi `cn`, `useAuth`, SETUP.md e script setup."
+> *Evidenza*: `d28fe12`, sequenza `fix: create simple …`, `32bcc57`.
+
+**Lezioni apprese**
+
+- **Rimozione Radix** riduce bundle e allinea al preset Solids, ma richiede riscrivere primitive (`d28fe12`).
 
 ### Fase 3 — Route group (dm), CI GitHub Actions, PWA, shell MD-inspired
 
@@ -70,9 +80,14 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 - **Route group** `(dm)` per namespacing app (`6a4d4cd`).
 - **PWA** con manifest e fix cache API (`2cc2c08`).
 
-**Prompt chiave usati**: > [TODO da compilare manualmente]
+**Prompt chiave usati**
 
-**Lezioni apprese**: > [TODO da compilare manualmente]
+> **Prompt [inferito]**: "Introduci route group (dm), tema fantasy, CI GitHub Actions, fix PWA workbox, branding D20, bump SoliDS."
+> *Evidenza*: `6a4d4cd`, `605a11f`, `fcbc4d8`, `273f9a7`.
+
+**Lezioni apprese**
+
+- **Workbox / next-pwa**: matcher cache deve **escludere** basi API inlined nello SW (`AGENTS.md` nota PWA).
 
 ### Fase 4 — Wiki accessibile, tipologiche, sidebar, allineamento primitive SoliDS
 
@@ -88,9 +103,14 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 
 - **Registry** componenti SoliDS come fonte di verità UI (`73c4d40`).
 
-**Prompt chiave usati**: > [TODO da compilare manualmente]
+**Prompt chiave usati**
 
-**Lezioni apprese**: > [TODO da compilare manualmente]
+> **Prompt [inferito]**: "Rendi wiki accessibile, aggiungi tipologiche D&D in `lib/tipologiche`, sidebar con avatar, allinea primitive a registry SoliDS; campagna obbligatoria su creazione personaggio."
+> *Evidenza*: `517c08b`, `2d217d7`, `dffe6c9`, `73c4d40`, `ea2b362`.
+
+**Lezioni apprese**
+
+- **Form personaggi** senza campagna selezionata crea dati inconsistenti → obbligo campagna in UI (`ea2b362`).
 
 ---
 
@@ -137,10 +157,29 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 
 ## Punti aperti / note per il futuro
 
-> [TODO da compilare manualmente: allineamento versione Next 16 ovunque, accessibilità wiki, i18n]
+- **grep `TODO|FIXME|HACK|XXX`** in `app/`, `components/`, `lib/`: nessun match prioritario in questa passata.
+- **Next 15 vs 16**: `AI_LOG` menziona evoluzione — verificare `package.json` e messaggi CI per versione effettiva su `main`.
+- **Debito tecnico inferito**: wiki accessibilità (`517c08b`) va rivalidato con axe/Playwright non citati nel log.
+- **Debito tecnico inferito**: i18n assente — tutta l’UI presumibilmente IT/EN misto come da commit.
+- **Debito tecnico inferito**: dipendenze Radix residue su alcune primitive (`AGENTS.md` elenca `@radix-ui/react-tabs` ecc.) — verificare coerenza con narrativa “Solids-only”.
 
 ---
 
-> **Nota metodologica**: questo file è stato generato retroattivamente analizzando la history del repo. Le sezioni con `> [TODO da compilare manualmente]` richiedono la memoria del developer e non possono essere inferite dalla sola analisi automatica. Integra progressivamente con annotazioni manuali mentre lavori alle prossime fasi del progetto.
+> **Nota metodologica**: completamento 2026-04-22; incrociare con `.github/workflows/ci.yml` per gate reali.
+
+---
+
+## Metodologia compilazione automatica
+
+Completamento autonomo il **22 aprile 2026** analizzando:
+
+- **53** commit (stima da prima stesura; verificare `git rev-list --count HEAD`)
+- **~9** file (`package.json`, `next.config.ts`, `AGENTS.md`, `vitest.config.ts`, `.github/workflows/ci.yml`, `lib/tipologiche/`, `components/ui/`)
+- **0** TODO/FIXME rilevanti dal grep workspace
+
+**Punti di minore confidenza:**
+
+- Numero commit se `main` remoto avanzato oltre `ea2b362`.
+- Stato effettivo dipendenze Radix vs messaggio “remove radix”.
 
 ---
