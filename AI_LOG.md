@@ -6,7 +6,7 @@ Memoria di sviluppo AI-assisted. Annotazioni sui prompt, decisioni e pattern eme
 
 ## Overview del progetto
 
-Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon Master**: shell UI con **@soli92/solids**, componenti primitivi, wiki, mappa, PWA, **Vitest** e **GitHub Actions** (lint, typecheck, test, build). Partenza con **shadcn/ui** poi rimozione Radix a favore di Tailwind+Solids.
+Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon Master**: shell UI con **@soli92/solids ^1.7.0** (font in `app/layout.tsx`, test `lib/solids-package.test.ts`), componenti primitivi, wiki, mappa, PWA, **Vitest** e **GitHub Actions** (lint, typecheck, test, build). Partenza con **shadcn/ui** poi rimozione Radix a favore di Tailwind+Solids.
 
 **Stack AI usato (inferito; aggiornato 2026-04-22)**: assistenza **IDE/LLM probabile** (serie `fix: create simple …`). `AGENTS.md` esplicito (`cd52603`). Pattern `.cursor/rules` ecosistema soli92. Nessun SDK LLM nel frontend DM. Messaggi commit lunghi multi-scope (`6a4d4cd`, `73c4d40`).
 
@@ -111,6 +111,12 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 **Lezioni apprese**
 
 - **Form personaggi** senza campagna selezionata crea dati inconsistenti → obbligo campagna in UI (`ea2b362`).
+
+### Fase 5 — Bump @soli92/solids 1.7.0, font stack, test dipendenza (2026-04-24)
+
+**Cosa è stato fatto**: dipendenza **`@soli92/solids` ^1.7.0**; link **Google Fonts** in `app/layout.tsx`; **`lib/solids-package.test.ts`** in Vitest; README / AGENTS / AI_LOG aggiornati.
+
+**Lezioni**: il tema **fantasy** usa heading serif da token — caricare le famiglie display evita mismatch con Storybook SoliDS.
 
 ---
 
