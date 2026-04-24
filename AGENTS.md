@@ -1,6 +1,6 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-10
+**Ultimo aggiornamento:** 2026-04-24
 
 ## Progetto
 
@@ -70,3 +70,11 @@ Problemi già risolti in passato: `react-leaflet@^4.2.3` (usare ^4.2.1), `@apply
 - Non aggiungere librerie UI pesanti duplicate rispetto al pattern SoliDS + componenti locali.
 - Messaggi utente e copy auth: **italiano**; errori Supabase mappati con `formatAuthError` dove appropriato.
 - Coerenza **CORS**: configurazione sul backend; il FE non “sistema” CORS da solo.
+
+## Known edge cases & gotchas
+
+- **Pinning dipendenze in flussi shadcn**: nella history ci sono stati break dovuti a versioni non valide/instabili durante lo scaffolding shadcn; quando si rigenerano componenti o si riallineano dipendenze, verificare i pin usati nel progetto. Fix storici: `8a2a733`, `3c3c5eb`.
+
+- **Tailwind content path per SoliDS**: una configurazione incompleta dei path di content può far sparire classi/stili SoliDS in build (pur con codice corretto). Riferimento fix: `4d660c3` (vedi AI_LOG “Problemi tecnici risolti”).
+
+- **Creazione personaggi: campagna obbligatoria**: senza campagna selezionata si producono dati inconsistenti; il flusso UI è stato corretto imponendo il vincolo in creazione. Riferimento: `ea2b362`.
