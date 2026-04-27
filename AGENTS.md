@@ -1,6 +1,6 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-24
+**Ultimo aggiornamento:** 2026-04-27
 
 ## Progetto
 
@@ -40,6 +40,10 @@
 - `npm test` / `npm run test:watch`
 - File: `tests/auth-errors.test.ts`, `tests/utils.test.ts`, `tests/tipologiche.test.ts`, `tests/subclasses.test.ts`, `tests/solids-ui.test.ts`, `tests/client.test.ts`, `tests/character-sheet.test.ts`, `tests/characters-api.test.ts`, `tests/racial-class-reference.test.ts`, `tests/useCampaigns.test.tsx`
 - Setup: `vitest.config.ts` → `vitest.setup.ts`; `@testing-library/react` dove serve
+
+### Integrazione Soli Prof (RAG / webhook)
+
+Questo repository è in **`CORPUS_REPOS`** su [soli-prof](https://github.com/soli92/soli-prof). I test Vitest (vedi sotto) **non** dipendono dal webhook `push` su Soli Prof. Dettagli: [soli-prof `AGENTS.md`](https://github.com/soli92/soli-prof/blob/main/AGENTS.md), `setup-webhooks.sh`.
 
 ## Variabili d’ambiente
 

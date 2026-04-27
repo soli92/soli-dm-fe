@@ -4,6 +4,8 @@
 
 Questo repository contiene il **Frontend** costruito con **Next.js 15 + TypeScript + Tailwind CSS + Supabase Auth**.
 
+Vedi [`AGENTS.md`](./AGENTS.md) e [`AI_LOG.md`](./AI_LOG.md). [Soli Prof](https://github.com/soli92/soli-prof) elenca questo repo in RAG; webhook su `push` (documentato in Soli Prof `AGENTS.md`). I test `npm test` in CI/locale **non** dipendono.
+
 ---
 
 ## 📋 Caratteristiche

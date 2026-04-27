@@ -16,6 +16,12 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 
 ---
 
+## Aggiornamento 2026-04-27 — Soli Prof (RAG) / documentazione
+
+- [soli-prof](https://github.com/soli92/soli-prof) indica questo repo in `CORPUS_REPOS` dove applicabile. Webhook `push` verso `https://soli-prof.vercel.app/api/webhooks/github` (HMAC) per re-ingest. Allineati `AGENTS.md` e riferimenti; i test del repo **non** dipendono.
+
+---
+
 ## Fasi di sviluppo (inferite dal history)
 
 ### Fase 1 — Scaffold Next + shadcn + Solids preset
