@@ -11,6 +11,13 @@ const THEMES = [
   { id: "light", label: "Chiaro" },
   { id: "cyberpunk", label: "Cyberpunk" },
   { id: "90s-party", label: "90s" },
+  { id: "steampunk", label: "Steampunk" },
+  { id: "ichigo", label: "Ichigo" },
+  { id: "vegeta", label: "Vegeta" },
+  { id: "zoro", label: "Zoro" },
+  { id: "captain-america", label: "Captain America" },
+  { id: "sasuke", label: "Sasuke" },
+  { id: "inuyasha", label: "Inuyasha" },
 ] as const;
 
 export type ThemeSwitcherProps = {

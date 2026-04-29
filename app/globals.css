@@ -43,6 +43,34 @@ html[data-theme="90s-party"] {
   color-scheme: dark;
 }
 
+html[data-theme="steampunk"] {
+  color-scheme: light;
+}
+
+html[data-theme="ichigo"] {
+  color-scheme: dark;
+}
+
+html[data-theme="vegeta"] {
+  color-scheme: dark;
+}
+
+html[data-theme="zoro"] {
+  color-scheme: dark;
+}
+
+html[data-theme="captain-america"] {
+  color-scheme: light;
+}
+
+html[data-theme="sasuke"] {
+  color-scheme: dark;
+}
+
+html[data-theme="inuyasha"] {
+  color-scheme: light;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

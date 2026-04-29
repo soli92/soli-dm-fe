@@ -10,7 +10,20 @@ export function Providers({ children }: { children: React.ReactNode }) {
       attribute="data-theme"
       defaultTheme="fantasy"
       enableSystem={false}
-      themes={["light", "dark", "fantasy", "cyberpunk", "90s-party"]}
+      themes={[
+        "light",
+        "dark",
+        "fantasy",
+        "cyberpunk",
+        "90s-party",
+        "steampunk",
+        "ichigo",
+        "vegeta",
+        "zoro",
+        "captain-america",
+        "sasuke",
+        "inuyasha",
+      ]}
       storageKey="soli-dm-theme"
     >
       {children}
