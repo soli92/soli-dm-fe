@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { D20Icon } from "@/components/brand/D20Icon";
+import { SoliBrandLogo } from "@/components/brand/SoliBrandLogo";
 import { UserAvatar, userDisplayName } from "@/components/UserAvatar";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -54,9 +54,10 @@ function SidebarNavContent({ onNavigate }: SidebarNavContentProps) {
           onClick={onNavigate}
           className="group flex items-center gap-3 rounded-xl text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
         >
-          <D20Icon
+          <SoliBrandLogo
             decorative
             className="h-10 w-10 shrink-0 drop-shadow-sm transition-transform motion-safe:group-hover:scale-105"
+            variant="symbol"
           />
           <div className="min-w-0">
             <span className="block font-serif text-lg font-bold leading-tight tracking-tight">
@@ -175,13 +176,11 @@ export function Navigation() {
             href="/"
             className="group flex min-w-0 flex-1 items-center gap-2.5 rounded-xl text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
-            <D20Icon
+            <SoliBrandLogo
               decorative
-              className="h-9 w-9 shrink-0 drop-shadow-sm transition-transform motion-safe:group-hover:scale-105"
+              priority
+              className="h-9 w-auto shrink-0 transition-transform motion-safe:group-hover:scale-105"
             />
-            <span className="truncate font-serif text-lg font-bold tracking-tight">
-              Soli DM
-            </span>
           </Link>
           <button
             type="button"

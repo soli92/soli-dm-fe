@@ -3,16 +3,19 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://soli-dm-fe.vercel.app"),
   applicationName: "Soli Dungeon Master",
   title: "Soli Dungeon Master",
   description:
     "Campagne D&D, personaggi, dadi e wiki — strumenti per giocatori e Dungeon Master.",
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: [
+      { url: "/brand/soli-favicon.svg", type: "image/svg+xml" },
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-      { url: "/brand/d20-icon.svg", type: "image/svg+xml" },
     ],
+    shortcut: [{ url: "/brand/soli-favicon.svg", type: "image/svg+xml" }],
     apple: [
       {
         url: "/icons/apple-touch-icon.png",
@@ -25,6 +28,19 @@ export const metadata: Metadata = {
     capable: true,
     title: "Soli DM",
     statusBarStyle: "black-translucent",
+  },
+  openGraph: {
+    title: "Soli Dungeon Master",
+    description:
+      "Campagne D&D, personaggi, dadi e wiki — strumenti per giocatori e Dungeon Master.",
+    images: ["/brand/soli-logo-gold.svg"],
+  },
+  twitter: {
+    card: "summary",
+    title: "Soli Dungeon Master",
+    description:
+      "Campagne D&D, personaggi, dadi e wiki — strumenti per giocatori e Dungeon Master.",
+    images: ["/brand/soli-logo-gold.svg"],
   },
   formatDetection: {
     telephone: false,

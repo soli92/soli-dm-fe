@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { D20Icon } from "@/components/brand/D20Icon";
+import { SoliBrandLogo } from "@/components/brand/SoliBrandLogo";
 import {
   appBody,
   appBodySmall,
@@ -30,9 +30,9 @@ export default function Home() {
               "mb-6 flex flex-wrap items-center justify-center gap-4 md:gap-6"
             )}
           >
-            <D20Icon
+            <SoliBrandLogo
               decorative
-              className="h-16 w-16 drop-shadow-lg motion-safe:transition-transform md:h-24 md:w-24"
+              className="h-16 w-auto drop-shadow-lg motion-safe:transition-transform md:h-24"
             />
             <span>Soli Dungeon Master</span>
           </h1>

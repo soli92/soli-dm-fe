@@ -47,7 +47,7 @@ Vedi [`AGENTS.md`](./AGENTS.md) e [`AI_LOG.md`](./AI_LOG.md). [Soli Prof](https:
 Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **allineamenti** PHB (9), **classi SRD** (12, wiki/API) e **`PLAYBOOK_CLASS_NAMES`** (SRD + **Warrior**), **`SUBCLASSES_BY_CLASS`** / **`getSubclassOptionsForClass`** (sottoclassi SRD per classe + opzione «Altro» testo libero), **razze playbook** (12), **stati** campagna/personaggio, **preset** range livelli e notazioni dadi, **id categorie** regole wiki. Gli elenchi che esistono anche sul backend (`soli-dm-be` → `src/lib/tipologiche.ts`) vanno aggiornati **in parallelo** dove serve (vedi commenti nei file sorgente).
 
 ### 🎨 UI e tema (SoliDS)
-- **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** **^1.13.1** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk, ichigo, vegeta, zoro, captain-america, sasuke, inuyasha); **Google Fonts** in `app/layout.tsx`
+- **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** **^1.14.1** — token CSS e preset Tailwind (light, dark, fantasy, cyberpunk, 90s-party, steampunk, ichigo, vegeta, zoro, captain-america, sasuke, inuyasha); **Google Fonts** in `app/layout.tsx`
 - **Layout** (`lib/ui-classes.ts`): area DM con **gradiente leggero** su `appCanvas`; pannelli `appPanelStack` con vetro (`bg-card/95`, blur sottile)
 - **Componenti UI** in `components/ui/`: allineati al **registry React** del design system ([repo solids](https://github.com/soli92/solids) → `registry/solids/*`) — `Button` (class-variance-authority + Radix Slot), `Card` (compound), `Input` / `Textarea`, `Tabs` (Radix), `Avatar` (Radix), **`full-screen-loader`** (overlay caricamento). Il pacchetto npm **non** esporta questi file: restano copia curata in app.
 - **Scheda personaggio**: `components/character/CharacterIdentityPanel.tsx`, `CharacterTabsFields.tsx`; helper **`lib/character-sheet.ts`** (normalizzazione `stats`/`sheet_data`, modificatori)
@@ -55,6 +55,7 @@ Liste statiche condivise con la UI (form campagne/personaggi, dadi, wiki): **all
 - Layout shell: classi in `lib/ui-classes.ts` (`appPageShell`, `appPanelStack`, `appCanvas` sotto app bar fissa) e **navigazione a drawer** (`components/navigation.tsx`): barra superiore e pulsante menu su **tutte le larghezze**; il pannello link non è fisso su desktop (contenuto a larghezza piena, senza colonna laterale permanente)
 - **next-themes** — selezione tema nel drawer di navigazione (stesso pannello su mobile e desktop)
 - PWA: **@ducanh2912/next-pwa** (service worker in produzione; vedi nota in `AGENTS.md` su cache cross-origin e API)
+- Branding Soli (migrazione 2026-04-29): logo D20 sostituito con asset Soli (`SoliBrandLogo`), favicon SVG dedicata, icone PWA derivate da `public/brand/soli-symbol-gold.svg`
 
 ---
 

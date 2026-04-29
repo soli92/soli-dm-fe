@@ -22,6 +22,15 @@ Frontend **Next.js 15→16** (evoluzione in corso nei commit) per **Soli Dungeon
 
 ---
 
+## Aggiornamento 2026-04-29 — Branding Soli + bump SoliDS
+
+- Migrazione branding completata: home (`app/(dm)/page.tsx`), navigazione (`components/navigation.tsx`) e loader fullscreen (`components/ui/full-screen-loader.tsx`) usano `SoliBrandLogo` al posto di `D20Icon`.
+- Metadati PWA/SEO aggiornati (`app/layout.tsx`, `app/manifest.ts`): favicon SVG Soli, `manifest.webmanifest` esplicito, icona touch `180x180`, Open Graph/Twitter image su logo Soli.
+- Pipeline icone allineata (`scripts/generate-pwa-icons.mjs`) con sorgente `public/brand/soli-symbol-gold.svg`; rigenerate `public/icons/apple-touch-icon.png`, `icon-192.png`, `icon-512.png`.
+- Dipendenza e test allineati a **`@soli92/solids` ^1.14.1** (`package.json`, lockfile, `lib/solids-package.test.ts`, docs repo).
+
+---
+
 ## Fasi di sviluppo (inferite dal history)
 
 ### Fase 1 — Scaffold Next + shadcn + Solids preset

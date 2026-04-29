@@ -1,5 +1,6 @@
 "use client";
 
+import { SoliBrandLogo } from "@/components/brand/SoliBrandLogo";
 import { cn } from "@/lib/utils";
 
 export type FullScreenLoaderProps = {
@@ -31,13 +32,20 @@ export function FullScreenLoader({
         className
       )}
     >
-      <div
-        className={cn(
-          "h-14 w-14 rounded-full border-[3px] border-muted border-t-primary",
-          "motion-safe:animate-spin"
-        )}
-        aria-hidden
-      />
+      <div className="relative flex items-center justify-center">
+        <div
+          className={cn(
+            "absolute h-20 w-20 rounded-full border-2 border-primary/20 border-t-primary/70",
+            "motion-safe:animate-spin"
+          )}
+          aria-hidden
+        />
+        <SoliBrandLogo
+          variant="symbol"
+          decorative
+          className="h-12 w-12 drop-shadow-md motion-safe:animate-pulse"
+        />
+      </div>
       <p className="max-w-xs text-center text-sm font-medium text-muted-foreground">
         {label}
       </p>

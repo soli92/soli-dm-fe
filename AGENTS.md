@@ -1,10 +1,10 @@
 # AGENTS.md — Soli Dungeon Master Frontend
 
-**Ultimo aggiornamento:** 2026-04-27
+**Ultimo aggiornamento:** 2026-04-29
 
 ## Progetto
 
-**Next.js 15** (App Router), **React 18**, **TypeScript**, **Tailwind** + **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** (^1.13.1). Autenticazione **Supabase** (email/password in UI; OAuth configurabile in dashboard). API REST verso **soli-dm-be** (`lib/api.ts`). Notifiche: **Sonner**. PWA: **@ducanh2912/next-pwa** (SW disabilitato in `development`).
+**Next.js 15** (App Router), **React 18**, **TypeScript**, **Tailwind** + **[@soli92/solids](https://www.npmjs.com/package/@soli92/solids)** (^1.14.1). Autenticazione **Supabase** (email/password in UI; OAuth configurabile in dashboard). API REST verso **soli-dm-be** (`lib/api.ts`). Notifiche: **Sonner**. PWA: **@ducanh2912/next-pwa** (SW disabilitato in `development`).
 
 **URL produzione:** https://soli-dm-fe.vercel.app (Vercel). Backend tipico: https://soli-dm-be.onrender.com
 
@@ -12,7 +12,7 @@
 
 ## Checklist prima di una PR
 
-1. `npm run lint` · `npm run type-check` · `npm test` (include **`lib/solids-package.test.ts`** per range **`@soli92/solids` ^1.13.1**) · `npm run build` (allineato a `.github/workflows/ci.yml`, Node **22** in CI).
+1. `npm run lint` · `npm run type-check` · `npm test` (include **`lib/solids-package.test.ts`** per range **`@soli92/solids` ^1.14.1**) · `npm run build` (allineato a `.github/workflows/ci.yml`, Node **22** in CI).
 2. Non committare `.env.local` né segreti; usare `.env.example` come riferimento.
 3. Dopo cambi a **PWA / URL API**: verificare build e che `NEXT_PUBLIC_API_URL` sia coerente con Vercel.
 
@@ -34,6 +34,7 @@
 | Client API | `lib/api.ts` — header opzionale `NEXT_PUBLIC_SOLI_DM_API_KEY` se il backend ha `SOLI_DM_API_KEY` |
 | Tipologiche dominio | `lib/tipologiche/` — `dnd.ts` (classi/razze/allineamenti), **`subclasses.ts`** (sottoclassi SRD per `PLAYBOOK_CLASS_NAMES`), app, dadi, wiki (`index.ts` re-export) |
 | PWA / Workbox | `next.config.ts` — `dynamicStartUrl: false` (evita `_async_to_generator` nel SW); runtime cache cross-origin con matcher che **esclude** le basi API (stringhe inlined nel SW) |
+| Branding Soli | `components/brand/SoliBrandLogo.tsx`, `public/brand/soli-logo-gold.svg`, `public/brand/soli-symbol-gold.svg`, `public/brand/soli-favicon.svg`, script `scripts/generate-pwa-icons.mjs` |
 
 ## Test (Vitest)
 

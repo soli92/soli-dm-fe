@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const svgPath = join(root, "public/brand/d20-icon.svg");
+const svgPath = join(root, "public/brand/soli-symbol-gold.svg");
 const outDir = join(root, "public/icons");
 
 const targets = [
