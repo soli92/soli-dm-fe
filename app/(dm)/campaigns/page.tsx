@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ import {
 } from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ApiErrorHint, ApiErrorNotice } from "@/components/api/ApiErrorNotice";
 
 export default function CampaignsPage() {
   const { list, loading, saving, loadError, create } = useCampaigns();
@@ -29,10 +30,6 @@ export default function CampaignsPage() {
     world_setting: "",
     level_range: "1-5",
   });
-
-  useEffect(() => {
-    if (loadError) toast.error(loadError);
-  }, [loadError]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -132,7 +129,12 @@ export default function CampaignsPage() {
           <h2 id="campaign-list-heading" className={cn(appTitle, "mb-4")}>
             Le tue campagne
           </h2>
-          {loading ? (
+          {loadError ? (
+            <div className="space-y-3">
+              <ApiErrorNotice message={loadError} />
+              <ApiErrorHint />
+            </div>
+          ) : loading ? (
             <p className={appMuted}>Caricamento…</p>
           ) : list.length === 0 ? (
             <p className={appMuted}>Nessuna campagna ancora.</p>
