@@ -56,4 +56,10 @@ describe("createFetchJson", () => {
     const fetchJson = createFetchJson({ baseUrl: "http://x", apiKey: "" });
     await expect(fetchJson("/")).rejects.toThrow("vietato");
   });
+
+  it("su errore di rete lancia un messaggio leggibile", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    const fetchJson = createFetchJson({ baseUrl: "http://x", apiKey: "" });
+    await expect(fetchJson("/")).rejects.toThrow(/Impossibile contattare il server API/);
+  });
 });

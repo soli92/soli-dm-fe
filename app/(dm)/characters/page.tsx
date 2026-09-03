@@ -26,6 +26,7 @@ import {
 } from "@/lib/ui-classes";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ApiErrorHint, ApiErrorNotice } from "@/components/api/ApiErrorNotice";
 
 function CharactersContent() {
   const searchParams = useSearchParams();
@@ -36,6 +37,8 @@ function CharactersContent() {
   const [list, setList] = useState<Character[]>([]);
   const [campaignsBusy, setCampaignsBusy] = useState(true);
   const [listBusy, setListBusy] = useState(true);
+  const [campaignsError, setCampaignsError] = useState<string | null>(null);
+  const [charactersError, setCharactersError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     character_name: "",
@@ -58,12 +61,14 @@ function CharactersContent() {
 
   useEffect(() => {
     setCampaignsBusy(true);
+    setCampaignsError(null);
     void (async () => {
       try {
         const data = await getCampaigns();
         setCampaigns(data);
       } catch (e) {
-        toast.error(e instanceof Error ? e.message : "Errore campagne");
+        const message = e instanceof Error ? e.message : "Errore campagne";
+        setCampaignsError(message);
       } finally {
         setCampaignsBusy(false);
       }
@@ -79,12 +84,14 @@ function CharactersContent() {
 
   useEffect(() => {
     setListBusy(true);
+    setCharactersError(null);
     void (async () => {
       try {
         const data = await getCharacters(campaignId || undefined);
         setList(data);
       } catch (e) {
-        toast.error(e instanceof Error ? e.message : "Errore personaggi");
+        const message = e instanceof Error ? e.message : "Errore personaggi";
+        setCharactersError(message);
       } finally {
         setListBusy(false);
       }
@@ -219,7 +226,12 @@ function CharactersContent() {
               scheda JSON sul server. La lista in basso si aggiorna in base alla
               campagna selezionata.
             </p>
-            {campaigns.length === 0 && !campaignsBusy ? (
+            {campaignsError ? (
+              <div className="space-y-3">
+                <ApiErrorNotice message={campaignsError} />
+                <ApiErrorHint />
+              </div>
+            ) : campaigns.length === 0 && !campaignsBusy ? (
               <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-foreground">
                 Non hai ancora campagne.{" "}
                 <Link
@@ -300,7 +312,12 @@ function CharactersContent() {
                   }`
                 : "Personaggi — tutte le campagne"}
             </h2>
-            {listBusy && !dataLoading ? (
+            {charactersError ? (
+              <div className="space-y-3">
+                <ApiErrorNotice message={charactersError} />
+                <ApiErrorHint />
+              </div>
+            ) : listBusy && !dataLoading ? (
               <p className={appMuted}>Aggiornamento elenco…</p>
             ) : list.length === 0 ? (
               <p className={appMuted}>Nessun personaggio.</p>

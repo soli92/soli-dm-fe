@@ -1,4 +1,5 @@
 import type { ApiErrorBody } from "../types";
+import { formatApiError } from "../api-errors";
 
 export type ApiClientEnv = {
   baseUrl: string;
@@ -33,13 +34,18 @@ export function createFetchJson(env: ApiClientEnv) {
     endpoint: string,
     options?: RequestInit
   ): Promise<T> {
-    const response = await fetch(`${env.baseUrl}${endpoint}`, {
-      ...options,
-      headers: {
-        ...headersFor(env.apiKey),
-        ...(options?.headers as Record<string, string>),
-      },
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${env.baseUrl}${endpoint}`, {
+        ...options,
+        headers: {
+          ...headersFor(env.apiKey),
+          ...(options?.headers as Record<string, string>),
+        },
+      });
+    } catch (err) {
+      throw new Error(formatApiError(err));
+    }
 
     const body = (await response.json().catch(() => ({}))) as T & ApiErrorBody;
 
@@ -48,7 +54,7 @@ export function createFetchJson(env: ApiClientEnv) {
         (body as ApiErrorBody).error ||
         (body as ApiErrorBody).message ||
         `API error: ${response.status}`;
-      throw new Error(msg);
+      throw new Error(formatApiError(msg));
     }
 
     return body as T;
